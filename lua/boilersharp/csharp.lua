@@ -57,14 +57,19 @@ function M.parse_major_dotnet_version(version)
   return tonumber(string.match(version, "%d+"))
 end
 
+---@param path string? Path of the C# file
 ---@return string
-function M.get_type_name()
+function M.get_type_name(path)
   -- The pattern gets the filename until the first dot, as opposed to
   -- the last dot, which is what :r does
   -- Class.razor.cs
   --   :r       ->  Class.razor
   --   pattern  ->  Class
-  return vim.fn.expand([[%:t:s?\(\w\+\).*?\1?]])
+  local pattern = [[:t:s?\(\w\+\).*?\1?]]
+  if path then
+    return vim.fn.fnamemodify(path, pattern)
+  end
+  return vim.fn.expand("%" .. pattern)
 end
 
 local USINGS = {
