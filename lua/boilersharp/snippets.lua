@@ -22,12 +22,14 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 local cs = require("boilersharp.csharp")
 local cfg = require("boilersharp.config")
+local utils = require("boilersharp.utils")
 
 local M = {}
 
 ---@param data boilersharp.SnippetData
 ---@return table snippet
 local function make_snippet(data)
+  local dir = utils.current_file_parent()
   local template
 
   if data.file_scoped then
@@ -59,7 +61,7 @@ local function make_snippet(data)
       end
       return nil
     end),
-    namespace = f(cs.get_namespace),
+    namespace = f(function() return cs.get_dir_data(dir).namespace end),
     access = i(1, data.access),
     kind = t(data.type_kind),
     name = f(cs.get_type_name),

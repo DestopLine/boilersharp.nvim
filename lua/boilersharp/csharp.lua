@@ -3,44 +3,35 @@ local cache = require("boilersharp.cache")
 
 local M = {}
 
----@return string
-function M.get_namespace()
-  local dir = "%:p:h" -- Current file's parent directory
-  local parent_dir_path = vim.fn.expand(dir)
-  local cached_dir = cache._dir_cache[parent_dir_path]
-  if cached_dir then
-    return cached_dir.namespace
-  end
-
+---@param path string
+---@return boilersharp.DirData
+local function inspect_dir(path)
   ---@type string[]
   local namespace = {}
 
-  local expanded_dir
-  local prev_expanded_dir
+  local curr_path = path
+  local prev_path
   while true do
-    prev_expanded_dir = expanded_dir
-    expanded_dir = vim.fn.expand(dir)
-
     -- This will be true when we reach the top of the filesystem
-    if expanded_dir == prev_expanded_dir then
-      return vim.fn.expand("%:h:t")
+    if curr_path == prev_path then
+      return { namespace = vim.fn.fnamemodify(path, ":t") }
     end
 
-    for file in vim.fs.dir(expanded_dir) do
+    for file in vim.fs.dir(curr_path) do
       local extension = vim.fn.fnamemodify(file, ":e")
       if extension == "csproj" then
         table.insert(namespace, 1, vim.fn.fnamemodify(file, ":r"))
         local joined_namespace = table.concat(namespace, ".")
-        cache._dir_cache[parent_dir_path] = {
+        return {
           namespace = joined_namespace,
           csproj = file,
         }
-        return joined_namespace
       end
     end
 
-    table.insert(namespace, vim.fn.expand(dir .. ":t"))
-    dir = dir .. ":h"
+    table.insert(namespace, vim.fn.fnamemodify(curr_path, ":t"))
+    prev_path = curr_path
+    curr_path = vim.fn.fnamemodify(curr_path, ":h")
   end
 end
 
@@ -145,6 +136,19 @@ function M.uses_file_scoped_namespaces()
   end
 
   return use
+end
+
+---@param path string Path to directory
+---@return boilersharp.DirData
+function M.get_dir_data(path)
+  local dir_data = cache._dir_cache[path]
+
+  if not dir_data then
+    dir_data = inspect_dir(path)
+    cache._dir_cache[path] = dir_data
+  end
+
+  return dir_data
 end
 
 return M

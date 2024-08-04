@@ -1,5 +1,6 @@
 local cfg = require("boilersharp.config")
 local cs = require("boilersharp.csharp")
+local utils = require("boilersharp.utils")
 
 local M = {}
 
@@ -29,9 +30,11 @@ local function write_boilerplate()
     tab = "\t"
   end
 
+  local dir_data = cs.get_dir_data(utils.current_file_parent())
+
   if cs.uses_file_scoped_namespaces() then
     insert({
-      ("namespace %s;"):format(cs.get_namespace()),
+      ("namespace %s;"):format(dir_data.namespace),
       "",
       ("%s %s %s"):format(cfg.opts.default_access, cfg.opts.default_kind, cs.get_type_name()),
       "{",
@@ -40,7 +43,7 @@ local function write_boilerplate()
     })
   else
     insert({
-      ("namespace %s"):format(cs.get_namespace()),
+      ("namespace %s"):format(dir_data.namespace),
       "{",
       ("%s%s %s %s"):format(tab, cfg.opts.default_access, cfg.opts.default_kind, cs.get_type_name()),
       tab .. "{",
