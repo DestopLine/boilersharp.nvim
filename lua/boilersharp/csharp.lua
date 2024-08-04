@@ -107,19 +107,32 @@ end
 
 ---@return boolean
 function M.uses_file_scoped_namespaces()
-  local use = cfg.opts.use_file_scoped_namespaces
+  local opt = cfg.opts.use_file_scoped_namespaces
+  local use = false
 
-  if use == "always" then
-    return true
-  elseif use == "never" then
-    return false
-  elseif use == "version" then
-    --  TODO: Implement this
-    return true
-  elseif use == "csproj" then
+  if opt == "always" then
+    use = true
+
+  elseif opt == "never" then
+    use = false
+
+  elseif opt == "version" then
+    local version = M.get_dotnet_version()
+    if version ~= nil then
+      local major = M.parse_major_dotnet_version(version)
+      if major == nil then
+        print("Boilersharp: unable to parse dotnet version")
+      else
+        use = major >= 6
+      end
+    end
+
+  elseif opt == "csproj" then
     --  TODO: Implement this
     return true
   end
+
+  return use
 end
 
 return M
