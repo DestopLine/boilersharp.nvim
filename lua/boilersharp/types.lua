@@ -45,3 +45,13 @@
 ---@field access boilersharp.AccessModifier The access modifier of the C# type
 ---@field type_kind boilersharp.TypeKind The kind of type of the C# type ("class", "interface", etc)
 ---@field type_name string The name of the C# type
+
+---@class boilersharp.DirCache
+---@field path string Path to the directory
+---@field csproj string Path to the csproj used by the directory
+
+---@class boilersharp.CsprojCache
+---@field path string Path to the csproj file
+---@field dotnet_version string? Version of dotnet used 
+---@field cs_version number? Version of C# used
+---@field implicit_usings boolean Whether or not the project uses implicit usings
