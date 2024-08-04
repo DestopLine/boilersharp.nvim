@@ -68,4 +68,21 @@ function M.get_usings(spacing)
   end
 end
 
+---@return boolean
+function M.uses_file_scoped_namespaces()
+  local use = cfg.opts.use_file_scoped_namespaces
+
+  if use == "always" then
+    return true
+  elseif use == "never" then
+    return false
+  elseif use == "version" then
+    --  TODO: Implement this
+    return true
+  elseif use == "csproj" then
+    --  TODO: Implement this
+    return true
+  end
+end
+
 return M

@@ -1,7 +1,52 @@
+local cfg = require("boilersharp.config")
+local cs = require("boilersharp.csharp")
+
 local M = {}
 
 local function write_boilerplate()
-  vim.api.nvim_buf_set_lines(0, 0, -1, false, { "dingus inc.", "asdf", "123" })
+  local lines = {}
+
+  local function insert(obj)
+    if type(obj) == "table" then
+      for _, elem in pairs(obj) do
+        table.insert(lines, elem)
+      end
+    else
+      table.insert(lines, obj)
+    end
+  end
+
+  insert(cs.get_usings(true))
+
+  local tab
+  if vim.bo.expandtab then
+    tab = string.rep(" ", vim.bo.shiftwidth)
+  else
+    tab = "\t"
+  end
+
+  if cs.uses_file_scoped_namespaces() then
+    insert({
+      "namespace" .. " " .. cs.get_namespace() .. ";",
+      "",
+      cfg.opts.default_access .. " " .. cfg.opts.default_kind .. " " .. cs.get_type_name(),
+      "{",
+      tab,
+      "}",
+    })
+  else
+    insert({
+      "namespace" .. " " .. cs.get_namespace(),
+      "{",
+      tab .. cfg.opts.default_access .. " " .. cfg.opts.default_kind .. " " .. cs.get_type_name(),
+      tab .. "{",
+      tab .. tab,
+      tab .. "}",
+      "}"
+    })
+  end
+
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
 end
 
 local function write_boilerplate_on_empty()
