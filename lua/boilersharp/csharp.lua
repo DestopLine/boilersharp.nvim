@@ -52,15 +52,11 @@ local USINGS = {
   "using System.Threading.Tasks;",
 }
 
----@param spacing boolean Add spacing after the usings (if any)
 ---@return string[]
-function M.get_usings(spacing)
+function M.get_usings()
   if cfg.opts.add_usings == "never" then
     return {}
   elseif cfg.opts.add_usings == "always" then
-    if spacing then
-      return vim.iter({ USINGS,  "" }):flatten():totable()
-    end
     return USINGS
   else
     --  TODO: Calculate auto usings

@@ -16,7 +16,11 @@ local function write_boilerplate()
     end
   end
 
-  insert(cs.get_usings(true))
+  local usings = cs.get_usings()
+  if #usings > 0 then
+    insert(usings)
+    insert("")
+  end
 
   local tab
   if vim.bo.expandtab then
