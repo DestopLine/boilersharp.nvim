@@ -1,13 +1,20 @@
 local cfg = require("boilersharp.config")
+local cache = require("boilersharp.cache")
 
 local M = {}
 
 ---@return string
 function M.get_namespace()
+  local dir = "%:p:h" -- Current file's parent directory
+  local parent_dir_path = vim.fn.expand(dir)
+  local cached_dir = cache._dir_cache[parent_dir_path]
+  if cached_dir then
+    return cached_dir.namespace
+  end
+
   ---@type string[]
   local namespace = {}
 
-  local dir = "%:p:h" -- Current file's parent directory
   local expanded_dir
   local prev_expanded_dir
   while true do
@@ -23,7 +30,12 @@ function M.get_namespace()
       local extension = vim.fn.fnamemodify(file, ":e")
       if extension == "csproj" then
         table.insert(namespace, 1, vim.fn.fnamemodify(file, ":r"))
-        return table.concat(namespace, ".")
+        local joined_namespace = table.concat(namespace, ".")
+        cache._dir_cache[parent_dir_path] = {
+          namespace = joined_namespace,
+          csproj = file,
+        }
+        return joined_namespace
       end
     end
 
