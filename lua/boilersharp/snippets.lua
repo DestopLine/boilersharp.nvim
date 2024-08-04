@@ -52,7 +52,9 @@ local function make_snippet(data)
   end
 
   local format_args = {
-    usings = f(function() return cs.get_usings(true) end),
+    usings = f(function()
+      return vim.iter({cs.get_usings(true), ""}):flatten():totable()
+    end),
     namespace = f(cs.get_namespace),
     access = i(1, data.access),
     kind = t(data.type_kind),

@@ -53,19 +53,18 @@ local USINGS = {
 }
 
 ---@param spacing boolean Add spacing after the usings (if any)
----@return string | string[]
+---@return string[]
 function M.get_usings(spacing)
   if cfg.opts.add_usings == "never" then
-    return ""
+    return {}
   elseif cfg.opts.add_usings == "always" then
-    print("spacing!")
     if spacing then
-      return vim.iter({ USINGS, "", "" }):flatten():totable()
+      return vim.iter({ USINGS,  "" }):flatten():totable()
     end
     return USINGS
   else
     --  TODO: Calculate auto usings
-    return ""
+    return {}
   end
 end
 
