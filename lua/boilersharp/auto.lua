@@ -27,18 +27,18 @@ local function write_boilerplate()
 
   if cs.uses_file_scoped_namespaces() then
     insert({
-      "namespace" .. " " .. cs.get_namespace() .. ";",
+      ("namespace %s;"):format(cs.get_namespace()),
       "",
-      cfg.opts.default_access .. " " .. cfg.opts.default_kind .. " " .. cs.get_type_name(),
+      ("%s %s %s"):format(cfg.opts.default_access, cfg.opts.default_kind, cs.get_type_name()),
       "{",
       tab,
       "}",
     })
   else
     insert({
-      "namespace" .. " " .. cs.get_namespace(),
+      ("namespace %s"):format(cs.get_namespace()),
       "{",
-      tab .. cfg.opts.default_access .. " " .. cfg.opts.default_kind .. " " .. cs.get_type_name(),
+      ("%s%s %s %s"):format(tab, cfg.opts.default_access, cfg.opts.default_kind, cs.get_type_name()),
       tab .. "{",
       tab .. tab,
       tab .. "}",
