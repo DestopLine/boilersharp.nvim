@@ -160,17 +160,19 @@ local USINGS = {
   "using System.Threading.Tasks;",
 }
 
+---@param method ("never"|"always"|"version"|"csproj")?
 ---@return string[]
-function M.get_usings()
+function M.get_usings(method)
+  local opt = method or cfg.opts.add_usings
   local use
 
-  if cfg.opts.add_usings == "never" then
+  if opt == "never" then
     use = true
 
-  elseif cfg.opts.add_usings == "always" then
+  elseif opt == "always" then
     use = false
 
-  elseif cfg.opts.add_usings == "version" then
+  elseif opt == "version" then
     local version = M.get_dotnet_version()
     if version == nil then
       use = true
@@ -184,8 +186,11 @@ function M.get_usings()
       end
     end
 
-  elseif cfg.opts.add_usings == "csproj" then
+  elseif opt == "csproj" then
     local dir_data = M.get_dir_data(utils.current_file_parent())
+    if dir_data.csproj == nil then
+      return M.get_usings("version")
+    end
     local csproj_data = M.get_csproj_data(dir_data.csproj)
     use = not csproj_data.implicit_usings
   end
@@ -219,11 +224,10 @@ function M.uses_file_scoped_namespaces(csproj, method)
 
   elseif opt == "csproj" then
     if csproj == nil then
-      M.uses_file_scoped_namespaces(csproj, "version")
-    else
-      local csproj_data = M.get_csproj_data(csproj)
-      return csproj_data.file_scoped_namespace
+      return M.uses_file_scoped_namespaces(csproj, "version")
     end
+    local csproj_data = M.get_csproj_data(csproj)
+    return csproj_data.file_scoped_namespace
   end
 
   return use
