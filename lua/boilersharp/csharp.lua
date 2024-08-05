@@ -25,8 +25,9 @@ local function inspect_dir(path)
       if extension == "csproj" then
         table.insert(namespace, 1, vim.fn.fnamemodify(file, ":r"))
         local joined_namespace = table.concat(namespace, ".")
+        local csproj_data = M.get_csproj_data(file)
         return {
-          namespace = joined_namespace,
+          namespace = csproj_data.root_namespace or joined_namespace,
           csproj = file,
         }
       end
@@ -193,7 +194,7 @@ function M.get_usings()
 end
 
 ---@param csproj string? Path to the csproj file
----@param method "always"|"never"|"version"|"csproj"
+---@param method ("always"|"never"|"version"|"csproj")?
 ---@return boolean
 function M.uses_file_scoped_namespaces(csproj, method)
   local opt = method or cfg.opts.use_file_scoped_namespaces
