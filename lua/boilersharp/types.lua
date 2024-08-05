@@ -38,14 +38,6 @@
 ---@field type_kind boilersharp.TypeKind Kind of the C# type ("class", "interface", etc)
 ---@field file_scoped boolean Whether or not the snippet uses a file scoped namespace
 
----@class boilersharp.CsFileData
----@field implicit_usings boolean Whether the project uses implicit usings or not
----@field namespace string The namespace in which the C# is defined
----@field file_scoped_namespace boolean Whether the namespace is file-scoped or not
----@field access boilersharp.AccessModifier The access modifier of the C# type
----@field type_kind boilersharp.TypeKind The kind of type of the C# type ("class", "interface", etc)
----@field type_name string The name of the C# type
-
 ---{ [path/to/directory]: Dir }
 ---@alias boilersharp.DirCache { [string]: boilersharp.DirData }
 
@@ -57,6 +49,8 @@
 ---@alias boilersharp.CsprojCache { [string]: boilersharp.CsprojData }
 
 ---@class boilersharp.CsprojData
----@field dotnet_version string? Version of dotnet used 
----@field cs_version number? Version of C# used
+---@field target_framework string Version of dotnet used 
+---@field cs_version string Version of C# used
 ---@field implicit_usings boolean Whether or not the project uses implicit usings
+---@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces
+---@field root_namespace string? The root namespace of the csproj, if applicable

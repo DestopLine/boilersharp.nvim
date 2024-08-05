@@ -32,7 +32,7 @@ local function write_boilerplate()
 
   local dir_data = cs.get_dir_data(utils.current_file_parent())
 
-  if cs.uses_file_scoped_namespaces() then
+  if cs.uses_file_scoped_namespaces(dir_data.csproj) then
     insert({
       ("namespace %s;"):format(dir_data.namespace),
       "",
