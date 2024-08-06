@@ -20,12 +20,11 @@ local function inspect_dir(path)
       return { namespace = vim.fn.fnamemodify(path, ":t") }
     end
 
-    for file in vim.fs.dir(curr_path) do
-      local extension = vim.fn.fnamemodify(file, ":e")
-      if extension == "csproj" then
-        table.insert(namespace, 1, vim.fn.fnamemodify(file, ":r"))
+    for item, kind in vim.fs.dir(curr_path) do
+      if kind == "file" and vim.fn.fnamemodify(item, ":e") == "csproj" then
+        table.insert(namespace, 1, vim.fn.fnamemodify(item, ":r"))
         local joined_namespace = table.concat(namespace, ".")
-        local csproj_path = vim.fs.joinpath(curr_path, file)
+        local csproj_path = vim.fs.joinpath(curr_path, item)
         local csproj_data = M.get_csproj_data(csproj_path)
         return {
           namespace = csproj_data.root_namespace or joined_namespace,
