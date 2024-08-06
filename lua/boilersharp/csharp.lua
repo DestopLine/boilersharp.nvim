@@ -25,10 +25,11 @@ local function inspect_dir(path)
       if extension == "csproj" then
         table.insert(namespace, 1, vim.fn.fnamemodify(file, ":r"))
         local joined_namespace = table.concat(namespace, ".")
-        local csproj_data = M.get_csproj_data(file)
+        local csproj_path = vim.fs.joinpath(curr_path, file)
+        local csproj_data = M.get_csproj_data(csproj_path)
         return {
           namespace = csproj_data.root_namespace or joined_namespace,
-          csproj = file,
+          csproj = csproj_path,
         }
       end
     end
