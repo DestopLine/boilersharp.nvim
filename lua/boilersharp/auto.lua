@@ -56,7 +56,7 @@ local function write_boilerplate()
   vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
 end
 
-local function write_boilerplate_on_empty()
+local function write_boilerplate_if_empty()
   if vim.api.nvim_buf_line_count(0) > 1 then
     return
   end
@@ -75,14 +75,14 @@ function M.enable_auto_mode(mode)
       desc = "Write C# boilerplate on new file creation",
       group = vim.api.nvim_create_augroup("BoilersharpAutoMode", { clear = true }),
       pattern = "*.cs",
-      callback = write_boilerplate,
+      callback = write_boilerplate_if_empty,
     })
   elseif mode == "on_empty" then
     vim.api.nvim_create_autocmd("BufWinEnter", {
       desc = "Write C# boilerplate on empty file enter",
       group = vim.api.nvim_create_augroup("BoilersharpAutoMode", { clear = true }),
       pattern = "*.cs",
-      callback = write_boilerplate_on_empty,
+      callback = write_boilerplate_if_empty,
     })
   end
 end
