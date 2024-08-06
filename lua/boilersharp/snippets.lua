@@ -29,7 +29,6 @@ local M = {}
 ---@param data boilersharp.SnippetData
 ---@return table snippet
 local function make_snippet(data)
-  local dir = utils.current_file_parent()
   local template
 
   if data.file_scoped then
@@ -61,10 +60,10 @@ local function make_snippet(data)
       end
       return nil
     end),
-    namespace = f(function() return cs.get_dir_data(dir).namespace end),
+    namespace = f(function() return cs.get_dir_data(utils.current_file_parent()).namespace end),
     access = i(1, data.access),
     kind = t(data.type_kind),
-    name = f(cs.get_type_name),
+    name = f(function() return cs.get_type_name() end),
     last = i(0),
     tab = t("\t")
   }
