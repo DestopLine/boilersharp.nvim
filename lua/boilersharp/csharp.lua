@@ -257,7 +257,6 @@ function M.get_csproj_data(path)
 
   if not csproj_data then
     csproj_data = inspect_csproj(path)
-    print(vim.inspect(csproj_data))
     cache._csproj_cache[path] = csproj_data
   end
 
