@@ -33,7 +33,7 @@ local function inspect_dir(path)
       end
     end
 
-    table.insert(namespace, vim.fn.fnamemodify(curr_path, ":t"))
+    table.insert(namespace, 1, vim.fn.fnamemodify(curr_path, ":t"))
     prev_path = curr_path
     curr_path = vim.fn.fnamemodify(curr_path, ":h")
   end
