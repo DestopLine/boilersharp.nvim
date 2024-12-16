@@ -1,4 +1,4 @@
 indent_type = "Spaces"
-indent_width = 2
+indent_width = 4
 collapse_simple_statement = "FunctionOnly"
 column_width = 120
