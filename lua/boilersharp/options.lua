@@ -16,6 +16,7 @@ local M = {}
 ---@class boilersharp.PartialOptions.TypeDefinition
 ---@field default_access_modifier boilersharp.AccessModifier | nil
 ---@field default_type boilersharp.CsharpType | nil
+---@field infer_interfaces boolean | nil
 
 ---@class boilersharp.FullOptions
 ---@field usings boilersharp.FullOptions.Usings | false
