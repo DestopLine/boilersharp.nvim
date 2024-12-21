@@ -142,7 +142,7 @@ end
 function M.tfm_supports_file_scoped_namespaces(tfm)
     local version = tfm:match("^net(%d+)%.0")
     if version == nil then
-        return tfm:match("^netstandard%d+%.%d+$")
+        return tfm:match("^netstandard%d+%.%d+$") ~= nil
     end
     return tonumber(version) >= 6
 end
