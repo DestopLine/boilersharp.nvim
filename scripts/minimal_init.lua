@@ -1,7 +1,8 @@
 vim.opt.rtp:append(vim.fn.getcwd())
 
 if #vim.api.nvim_list_uis() == 0 then
-    local minitest_path = vim.fs.joinpath(vim.fn.getcwd(), "deps/mini.test")
-    vim.opt.rtp:append(minitest_path)
+    local deps = vim.fs.joinpath(vim.fn.getcwd(), "deps")
+    vim.opt.rtp:append(deps)
+    vim.opt.rtp:append(vim.fs.joinpath(deps, "mini.test"))
     require("mini.test").setup()
 end
