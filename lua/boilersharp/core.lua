@@ -28,7 +28,7 @@ function M.write_boilerplate(bufnr, ensure_empty)
 
     local boiler = boilerplate.from_file(path)
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
-    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 end
 
 return M
