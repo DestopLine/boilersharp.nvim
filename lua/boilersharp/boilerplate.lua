@@ -1,5 +1,5 @@
 local cs = require("boilersharp.csharp")
-local opts = require("boilersharp.options").options
+local config = require("boilersharp.config").config
 
 local M = {}
 
@@ -29,9 +29,9 @@ function M.from_file(path)
 
     ---@type boilersharp.Boilerplate.Namespace | nil
     local namespace
-    if opts.namespace then
+    if config.namespace then
         local file_scoped
-        local use_file_scoped = opts.namespace.use_file_scoped
+        local use_file_scoped = config.namespace.use_file_scoped
         if use_file_scoped == "never" then
             file_scoped = false
         elseif use_file_scoped == "always" then
@@ -51,16 +51,16 @@ function M.from_file(path)
 
     ---@type boilersharp.Boilerplate.Type | nil
     local type_
-    if opts.type_definition then
-        local cs_type = opts.type_definition.default_type
+    if config.type_definition then
+        local cs_type = config.type_definition.default_type
         local name = cs.get_type_name(path)
 
-        if opts.type_definition.infer_interfaces and name:match("^I[A-Z].*$") then
+        if config.type_definition.infer_interfaces and name:match("^I[A-Z].*$") then
             cs_type = "interface"
         end
 
         type_ = {
-            access_modifier = opts.type_definition.default_access_modifier,
+            access_modifier = config.type_definition.default_access_modifier,
             type = cs_type,
             name = name,
         }
@@ -82,11 +82,11 @@ local function get_indentation(level)
     level = level or 1
     local is_spaces
     local indent
-    if opts.indent_type == "tabs" then
+    if config.indent_type == "tabs" then
         is_spaces = false
-    elseif opts.indent_type == "spaces" then
+    elseif config.indent_type == "spaces" then
         is_spaces = true
-    elseif opts.indent_type == "auto" then
+    elseif config.indent_type == "auto" then
         is_spaces = vim.opt.expandtab:get()
     else
         error("Boilersharp: Invalid option for indent_type")

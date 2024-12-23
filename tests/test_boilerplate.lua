@@ -22,7 +22,7 @@ local old_project = {
 }
 
 T["to_string()"] = test.new_set({
-    ---@type [boilersharp.PartialOptions, string, boilersharp.CsprojData, boilersharp.DirData, string][]
+    ---@type [boilersharp.Config, string, boilersharp.CsprojData, boilersharp.DirData, string][]
     parametrize = {
         -- Implicit usings & file scoped namespaces
         {

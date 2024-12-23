@@ -1,4 +1,4 @@
-local opts = require("boilersharp.options").options
+local config = require("boilersharp.config").config
 
 local M = {}
 
@@ -102,11 +102,11 @@ local function inspect_csproj(path)
 end
 
 function M.get_usings(csproj_path)
-    if opts.usings == false then
+    if config.usings == false then
         return {}
     end
 
-    local implicit = opts.usings.implicit_usings
+    local implicit = config.usings.implicit_usings
     local add_usings
 
     if implicit == "never" then
@@ -121,7 +121,7 @@ function M.get_usings(csproj_path)
     end
 
     if add_usings then
-        return opts.usings.usings
+        return config.usings.usings
     else
         return {}
     end
