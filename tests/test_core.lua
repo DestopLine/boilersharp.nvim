@@ -58,7 +58,7 @@ T["write_boilerplate()"]["writes to non-empty buffer with ensure_empty = false"]
     child.api.nvim_buf_set_lines(0, 0, -1, false, { "Hey" })
 
     mock(expected_lines)
-    child.lua([[M.write_boilerplate(0, false)]])
+    child.lua([[M.write_boilerplate({ ensure_empty = false })]])
 
     local lines = child.api.nvim_buf_get_lines(0, 0, -1, false)
     expect.equality(lines, expected_lines)
