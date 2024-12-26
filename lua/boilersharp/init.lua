@@ -10,6 +10,23 @@ function M.setup(opts)
         pattern = "*.cs",
         callback = M.write_boilerplate,
     })
+
+    vim.api.nvim_create_user_command(
+        "Boilersharp",
+        function(cmd_opts)
+            local subcommand = cmd_opts.fargs[1]
+            if not subcommand or subcommand == "write" then
+                M.write_boilerplate()
+            elseif subcommand == "clear" then
+                require("boilersharp.csharp").clear_cache()
+            end
+        end,
+        {
+            nargs = "?",
+            desc = "Generate C# namespace, usings and class automatically",
+            complete = function() return { "clear", "write" } end,
+        }
+    )
 end
 
 ---@param bufnr integer | nil

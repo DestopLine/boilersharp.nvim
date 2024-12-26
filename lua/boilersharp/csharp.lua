@@ -40,6 +40,12 @@ local dir_cache = {}
 ---@type { [string]: boilersharp.CsprojData }
 local csproj_cache = {}
 
+---Clears cached directories and csproj files
+function M.clear_cache()
+    dir_cache = {}
+    csproj_cache = {}
+end
+
 ---@param path string
 ---@return boilersharp.DirData
 local function inspect_dir(path)
