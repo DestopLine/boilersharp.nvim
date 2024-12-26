@@ -4,6 +4,7 @@ local M = {}
 ---@field usings? boilersharp.Config.Usings | false
 ---@field namespace? boilersharp.Config.Namespace | false
 ---@field type_definition? boilersharp.Config.TypeDefinition | false
+---@field add_autocommand? boolean
 ---@field indent_type? "tabs" | "spaces" | "auto"
 
 ---@class boilersharp.Config.Usings
@@ -22,6 +23,7 @@ local M = {}
 ---@field usings boilersharp.FullConfig.Usings | false
 ---@field namespace boilersharp.FullConfig.Namespace | false
 ---@field type_definition boilersharp.FullConfig.TypeDefinition | false
+---@field add_autocommand boolean
 ---@field indent_type "tabs" | "spaces" | "auto"
 
 M.DEFAULT = {
@@ -58,6 +60,9 @@ M.DEFAULT = {
         ---@type boolean
         infer_interfaces = true,
     },
+
+    ---@type boolean
+    add_autocommand = true,
 
     ---@type "tabs" | "spaces" | "auto"
     indent_type = "auto",

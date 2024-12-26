@@ -2,14 +2,17 @@ local M = {}
 
 ---@param opts? boilersharp.Config
 function M.setup(opts)
-    require("boilersharp.config").init_config(opts)
+    local config = require("boilersharp.config")
+    config.init_config(opts)
 
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-        desc = "Write C# boilerplate when entering an empty C# file",
-        group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
-        pattern = "*.cs",
-        callback = function() M.write_boilerplate() end,
-    })
+    if config.config.add_autocommand then
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            desc = "Write C# boilerplate when entering an empty C# file",
+            group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
+            pattern = "*.cs",
+            callback = function() M.write_boilerplate() end,
+        })
+    end
 
     vim.api.nvim_create_user_command(
         "Boilersharp",
