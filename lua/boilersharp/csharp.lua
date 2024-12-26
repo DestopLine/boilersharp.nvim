@@ -20,7 +20,7 @@ local M = {}
 ---| "record struct"
 
 ---@class boilersharp.DirData
----@field csproj string | nil Path to csproj file
+---@field csproj? string Path to csproj file
 ---@field namespace string Namespace of the directory
 
 ---@class boilersharp.CsprojData
@@ -28,7 +28,7 @@ local M = {}
 ---@field cs_version string Version of C# used
 ---@field implicit_usings boolean Whether or not the project uses implicit usings
 ---@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces
----@field root_namespace string | nil The root namespace of the csproj, if applicable
+---@field root_namespace? string The root namespace of the csproj, if applicable
 
 local TSLANG = "xml"
 
@@ -183,7 +183,7 @@ function M.tfm_supports_file_scoped_namespaces(tfm)
     return tonumber(version) >= 6
 end
 
----@param path string | nil Path of the C# file
+---@param path? string Path of the C# file
 ---@return string
 function M.get_type_name(path)
   -- The pattern gets the filename until the first dot, as opposed to

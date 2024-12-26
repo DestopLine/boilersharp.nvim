@@ -1,6 +1,6 @@
 local M = {}
 
----@param opts boilersharp.Config | nil
+---@param opts? boilersharp.Config
 function M.setup(opts)
     require("boilersharp.config").init_config(opts)
 
@@ -29,7 +29,7 @@ function M.setup(opts)
     )
 end
 
----@param opts { bufnr: integer, ensure_empty: boolean } | nil
+---@param opts? { bufnr: integer, ensure_empty: boolean }
 function M.write_boilerplate(opts)
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0

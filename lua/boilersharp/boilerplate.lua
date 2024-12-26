@@ -5,8 +5,8 @@ local M = {}
 
 ---@class boilersharp.Boilerplate
 ---@field usings string[]
----@field namespace boilersharp.Boilerplate.Namespace | nil
----@field type boilersharp.Boilerplate.Type | nil
+---@field namespace? boilersharp.Boilerplate.Namespace
+---@field type? boilersharp.Boilerplate.Type
 
 ---@class boilersharp.Boilerplate.Namespace
 ---@field file_scoped boolean
@@ -27,7 +27,7 @@ function M.from_file(path)
     local dir_data = cs.get_dir_data(file_parent(path))
     local csproj_data = cs.get_csproj_data(dir_data.csproj)
 
-    ---@type boilersharp.Boilerplate.Namespace | nil
+    ---@type boilersharp.Boilerplate.Namespace?
     local namespace
     if config.namespace then
         local file_scoped
@@ -49,7 +49,7 @@ function M.from_file(path)
         namespace = nil
     end
 
-    ---@type boilersharp.Boilerplate.Type | nil
+    ---@type boilersharp.Boilerplate.Type?
     local type_
     if config.type_definition then
         local cs_type = config.type_definition.default_type
@@ -76,7 +76,7 @@ function M.from_file(path)
     }
 end
 
----@param level integer | nil Times to repeat the indentation. Defaults to 1.
+---@param level? integer Times to repeat the indentation. Defaults to 1.
 ---@return string
 local function get_indentation(level)
     level = level or 1

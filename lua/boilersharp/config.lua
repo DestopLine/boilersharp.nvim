@@ -1,22 +1,22 @@
 local M = {}
 
 ---@class boilersharp.Config
----@field usings boilersharp.Config.Usings | false | nil
----@field namespace boilersharp.Config.Namespace | false | nil
----@field type_definition boilersharp.Config.TypeDefinition | false | nil
----@field indent_type "tabs" | "spaces" | "auto" | nil
+---@field usings? boilersharp.Config.Usings | false
+---@field namespace? boilersharp.Config.Namespace | false
+---@field type_definition? boilersharp.Config.TypeDefinition | false
+---@field indent_type? "tabs" | "spaces" | "auto"
 
 ---@class boilersharp.Config.Usings
----@field implicit_usings "never" | "always" | "auto" | nil
----@field usings string[] | nil
+---@field implicit_usings? "never" | "always" | "auto"
+---@field usings? string[]
 
 ---@class boilersharp.Config.Namespace
----@field use_file_scoped "never" | "always" | "auto" | nil
+---@field use_file_scoped? "never" | "always" | "auto"
 
 ---@class boilersharp.Config.TypeDefinition
----@field default_access_modifier boilersharp.AccessModifier | nil
----@field default_type boilersharp.CsharpType | nil
----@field infer_interfaces boolean | nil
+---@field default_access_modifier? boilersharp.AccessModifier
+---@field default_type? boilersharp.CsharpType
+---@field infer_interfaces? boolean
 
 ---@class boilersharp.FullConfig
 ---@field usings boilersharp.FullConfig.Usings | false
@@ -64,7 +64,7 @@ M.DEFAULT = {
 
 M.config = M.DEFAULT
 
----@param opts boilersharp.Config | nil
+---@param opts? boilersharp.Config
 function M.init_config(opts)
     M.config = vim.tbl_deep_extend("force", M.DEFAULT, opts or {})
 end

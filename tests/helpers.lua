@@ -3,7 +3,7 @@ local M = {}
 require("mini.test").setup()
 
 ---Makes and initializes a child neovim instance and a test set.
----@param opts table | nil Table to pass to MiniTest.new_set().
+---@param opts? table Table to pass to MiniTest.new_set().
 ---@return MiniTest.child
 ---@return table
 function M.new_test(opts)
