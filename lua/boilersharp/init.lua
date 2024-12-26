@@ -8,7 +8,7 @@ function M.setup(opts)
         desc = "Write C# boilerplate when entering an empty C# file",
         group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
         pattern = "*.cs",
-        callback = M.write_boilerplate,
+        callback = function() M.write_boilerplate() end,
     })
 
     vim.api.nvim_create_user_command(
