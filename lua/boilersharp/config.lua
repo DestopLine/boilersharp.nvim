@@ -22,6 +22,7 @@ local M = {}
 ---@field usings boilersharp.FullConfig.Usings | false
 ---@field namespace boilersharp.FullConfig.Namespace | false
 ---@field type_definition boilersharp.FullConfig.TypeDefinition | false
+---@field indent_type "tabs" | "spaces" | "auto"
 
 M.DEFAULT = {
     ---@class boilersharp.FullConfig.Usings
@@ -62,6 +63,7 @@ M.DEFAULT = {
     indent_type = "auto",
 }
 
+---@type boilersharp.FullConfig
 M.config = M.DEFAULT
 
 ---@param opts? boilersharp.Config
