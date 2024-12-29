@@ -3,6 +3,7 @@ local config = require("boilersharp.config").config
 local M = {}
 local H = {}
 
+---[Access modifiers](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/access-modifiers) used in C#.
 ---@alias boilersharp.AccessModifier
 ---| "public"
 ---| "protected"
@@ -12,6 +13,7 @@ local H = {}
 ---| "private protected"
 ---| "file"
 
+---C# keywords used to declare types.
 ---@alias boilersharp.CsharpType
 ---| "class"
 ---| "struct"
@@ -20,34 +22,38 @@ local H = {}
 ---| "record"
 ---| "record struct"
 
+---Data related to a directory in a C# project.
 ---@class boilersharp.DirData
----@field csproj? string Path to csproj file
----@field namespace string Namespace of the directory
+---@field csproj? string Path to csproj file this directory belongs to, if any.
+---@field namespace string Namespace that the C# files in the directory will use.
 
+---Data related to a csproj file.
 ---@class boilersharp.CsprojData
----@field target_framework string Version of dotnet used 
----@field cs_version string Version of C# used
----@field implicit_usings boolean Whether or not the project uses implicit usings
----@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces
----@field root_namespace? string The root namespace of the csproj, if applicable
+---@field target_framework string Version of dotnet used. Equivalent to TargetFramework tag.
+---@field cs_version string Version of C# used. Equivalent to LangVer tag.
+---@field implicit_usings boolean Whether or not the project uses implicit usings.
+---@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces.
+---@field root_namespace? string The root namespace of the csproj, if applicable. Equivalent to RootNamespace tag.
 
 local TSLANG = "xml"
 
----{ [path/to/directory]: Dir }
+---Table where the key is a path to a directory and the value is `boilersharp.DirData`.
 ---@type { [string]: boilersharp.DirData }
 local dir_cache = {}
 
----{ [path/to/project.csproj]: Csproj }
+---Table where the key is a path to a csproj file and the value is `boilersharp.CsprojData`.
 ---@type { [string]: boilersharp.CsprojData }
 local csproj_cache = {}
 
----Clears cached directories and csproj files
+---Clears cached directories and csproj files.
 function M.clear_cache()
     dir_cache = {}
     csproj_cache = {}
 end
 
----@param path string Path to directory
+---Gets information about a directory relative to the closest csproj file.
+---@see boilersharp.DirData
+---@param path string Path to directory.
 ---@return boilersharp.DirData
 function M.get_dir_data(path)
     local dir_data = dir_cache[path]
@@ -60,7 +66,9 @@ function M.get_dir_data(path)
     return dir_data
 end
 
----@param path string Path to csproj file
+---Gets information about a csproj file and what C# syntax it supports.
+---@see boilersharp.CsprojData
+---@param path string Path to csproj file.
 ---@return boilersharp.CsprojData
 function M.get_csproj_data(path)
     if not path:match(".csproj$") then
@@ -77,6 +85,10 @@ function M.get_csproj_data(path)
     return csproj_data
 end
 
+---Gets usings as needed by the csproj and the config.
+---@see boilersharp.Config.Usings
+---@param csproj_path string Path to the csproj.
+---@return string[] #Array of namespaces needed for the usings.
 function M.get_usings(csproj_path)
     if config.usings == false then
         return {}
@@ -103,7 +115,8 @@ function M.get_usings(csproj_path)
     end
 end
 
----@param version string C# version as specified by [C# language version reference](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-versioning#c-language-version-reference)
+---Returns whether the specified C# version supports file scoped namespace syntax.
+---@param version string C# version as specified by [C# language version reference](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/language-versioning#c-language-version-reference).
 ---@return boolean
 function M.cs_version_supports_file_scoped_namespaces(version)
     return not vim.tbl_contains(
@@ -113,6 +126,8 @@ function M.cs_version_supports_file_scoped_namespaces(version)
     )
 end
 
+---Returns whether or not the specified Target Framework supports file socoped
+---namespace syntax when no LangVer tag is specified in csproj file.
 ---@param tfm string [Target Framework](https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
 ---@return boolean
 function M.tfm_supports_file_scoped_namespaces(tfm)
@@ -123,7 +138,8 @@ function M.tfm_supports_file_scoped_namespaces(tfm)
     return tonumber(version) >= 6
 end
 
----@param path? string Path of the C# file
+---Gets the name of the C# type that goes in the specified file.
+---@param path? string Path of the C# file.
 ---@return string
 function M.get_type_name(path)
   -- The pattern gets the filename until the first dot, as opposed to

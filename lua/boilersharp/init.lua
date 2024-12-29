@@ -1,7 +1,8 @@
 local M = {}
 local H = {}
 
----@param opts? boilersharp.Config
+---Initializes and configures the plugin.
+---@param opts? boilersharp.Config Configuration options.
 function M.setup(opts)
     local config = require("boilersharp.config")
     config.init_config(opts)
@@ -10,6 +11,7 @@ function M.setup(opts)
     H.add_commands()
 end
 
+---Writes boilerplate to a C# file.
 ---@param opts? { bufnr: integer, ensure_empty: boolean }
 function M.write_boilerplate(opts)
     opts = opts or {}

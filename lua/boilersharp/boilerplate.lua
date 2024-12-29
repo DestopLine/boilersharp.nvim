@@ -4,21 +4,25 @@ local config = require("boilersharp.config").config
 local M = {}
 local H = {}
 
+---Represents boilerplate in C#
 ---@class boilersharp.Boilerplate
----@field usings string[]
+---@field usings string[] Namespaces to use for usings.
 ---@field namespace? boilersharp.Boilerplate.Namespace
----@field type? boilersharp.Boilerplate.Type
+---@field type? boilersharp.Boilerplate.Type 
 
+---Information about the namespace in the boilerplate.
 ---@class boilersharp.Boilerplate.Namespace
----@field file_scoped boolean
----@field namespace string
+---@field file_scoped boolean Whether file scoped namespace syntax will be used when writing the boilerplate.
+---@field namespace string Namespace used for the boilerplate.
 
+---Information about the type in the boilerplate.
 ---@class boilersharp.Boilerplate.Type
----@field access_modifier boilersharp.AccessModifier
----@field type boilersharp.CsharpType
----@field name string
+---@field access_modifier boilersharp.AccessModifier Access modifier that will be used when writing the boilerplate.
+---@field type boilersharp.CsharpType Keyword that will be used to declare the typed when writing the boilerplate.
+---@field name string Name of the type used when writing boilerplate.
 
----@param path string Path to C# file
+---Takes a path to a file and returns a `boilersharp.Boilerplate`.
+---@param path string Path to C# file.
 ---@return boilersharp.Boilerplate
 function M.from_file(path)
     local dir_data = cs.get_dir_data(H.file_parent(path))
@@ -73,6 +77,7 @@ function M.from_file(path)
     }
 end
 
+---Takes a `boilersharp.Boilerplate` and converts it to C# code.
 ---@param boilerplate boilersharp.Boilerplate
 ---@return string
 function M.to_string(boilerplate)
