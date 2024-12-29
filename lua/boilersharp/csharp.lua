@@ -1,6 +1,7 @@
 local config = require("boilersharp.config").config
 
 local M = {}
+local H = {}
 
 ---@alias boilersharp.AccessModifier
 ---| "public"
@@ -46,92 +47,31 @@ function M.clear_cache()
     csproj_cache = {}
 end
 
----@param path string
+---@param path string Path to directory
 ---@return boilersharp.DirData
-local function inspect_dir(path)
-    ---@type string[]
-    local namespace = {}
+function M.get_dir_data(path)
+    local dir_data = dir_cache[path]
 
-    local curr_path = path
-    local prev_path
-    while true do
-        -- This will be true when we reach the top of the filesystem
-        if curr_path == prev_path then
-            return { namespace = vim.fn.fnamemodify(path, ":t") }
-        end
-
-        for item, kind in vim.fs.dir(curr_path) do
-            if kind == "file" and vim.fn.fnamemodify(item, ":e") == "csproj" then
-                table.insert(namespace, 1, vim.fn.fnamemodify(item, ":r"))
-                local joined_namespace = table.concat(namespace, ".")
-                local csproj_path = vim.fs.joinpath(curr_path, item)
-                local csproj_data = M.get_csproj_data(csproj_path)
-                return {
-                    namespace = csproj_data.root_namespace or joined_namespace,
-                    csproj = csproj_path,
-                }
-            end
-        end
-
-        table.insert(namespace, 1, vim.fn.fnamemodify(curr_path, ":t"))
-        prev_path = curr_path
-        curr_path = vim.fn.fnamemodify(curr_path, ":h")
+    if not dir_data then
+        dir_data = H.inspect_dir(path)
+        dir_cache[path] = dir_data
     end
+
+    return dir_data
 end
 
----@param path string Path to the csproj file
+---@param path string Path to csproj file
 ---@return boilersharp.CsprojData
-local function inspect_csproj(path)
-    ---@type string[]
-    local lines = vim.fn.readfile(path)
-    local source = table.concat(lines, "\n")
-    local query = vim.treesitter.query.get(TSLANG, "boilersharp")
-    if query == nil then
-        error("Boilersharp: could not load query")
+function M.get_csproj_data(path)
+    if not path:match(".csproj$") then
+        error("Invalid argument. Path must be a path to a file ending in .csproj")
     end
 
-    local parser = vim.treesitter.get_string_parser(source, TSLANG)
-    local tree = parser:parse()
-    local root = tree[1]:root()
+    local csproj_data = csproj_cache[path]
 
-    ---@type number, number
-    local key_id, value_id
-    for id, capture in pairs(query.captures) do
-        if capture == "key" then
-            key_id = id
-        elseif capture == "value" then
-            value_id = id
-        end
-    end
-
-    ---@type boilersharp.CsprojData
-    local csproj_data = {
-        implicit_usings = false,
-        cs_version = "",
-        target_framework = "default",
-        file_scoped_namespace = false,
-        root_namespace = nil,
-    }
-
-    -- pattern, captures, metadata
-    for _, captures, _ in query:iter_matches(root, source) do
-        local key = vim.treesitter.get_node_text(captures[key_id], source)
-        local value = vim.treesitter.get_node_text(captures[value_id], source)
-        if key == "ImplicitUsings" and value == "enable" then
-            csproj_data.implicit_usings = true
-        elseif key == "LangVersion" then
-            csproj_data.cs_version = value
-        elseif key == "RootNamespace" then
-            csproj_data.root_namespace = value
-        elseif key == "TargetFramework" then
-            csproj_data.target_framework = value
-        end
-    end
-
-    if csproj_data.cs_version == "" then
-        csproj_data.file_scoped_namespace = M.tfm_supports_file_scoped_namespaces(csproj_data.target_framework)
-    else
-        csproj_data.file_scoped_namespace = M.cs_version_supports_file_scoped_namespaces(csproj_data.cs_version)
+    if not csproj_data then
+        csproj_data = H.inspect_csproj(path)
+        csproj_cache[path] = csproj_data
     end
 
     return csproj_data
@@ -198,31 +138,92 @@ function M.get_type_name(path)
   return vim.fn.expand("%" .. pattern)
 end
 
----@param path string Path to directory
+---@param path string
 ---@return boilersharp.DirData
-function M.get_dir_data(path)
-    local dir_data = dir_cache[path]
+function H.inspect_dir(path)
+    ---@type string[]
+    local namespace = {}
 
-    if not dir_data then
-        dir_data = inspect_dir(path)
-        dir_cache[path] = dir_data
+    local curr_path = path
+    local prev_path
+    while true do
+        -- This will be true when we reach the top of the filesystem
+        if curr_path == prev_path then
+            return { namespace = vim.fn.fnamemodify(path, ":t") }
+        end
+
+        for item, kind in vim.fs.dir(curr_path) do
+            if kind == "file" and vim.fn.fnamemodify(item, ":e") == "csproj" then
+                table.insert(namespace, 1, vim.fn.fnamemodify(item, ":r"))
+                local joined_namespace = table.concat(namespace, ".")
+                local csproj_path = vim.fs.joinpath(curr_path, item)
+                local csproj_data = M.get_csproj_data(csproj_path)
+                return {
+                    namespace = csproj_data.root_namespace or joined_namespace,
+                    csproj = csproj_path,
+                }
+            end
+        end
+
+        table.insert(namespace, 1, vim.fn.fnamemodify(curr_path, ":t"))
+        prev_path = curr_path
+        curr_path = vim.fn.fnamemodify(curr_path, ":h")
     end
-
-    return dir_data
 end
 
----@param path string Path to csproj file
+---@param path string Path to the csproj file
 ---@return boilersharp.CsprojData
-function M.get_csproj_data(path)
-    if not path:match(".csproj$") then
-        error("Invalid argument. Path must be a path to a file ending in .csproj")
+function H.inspect_csproj(path)
+    ---@type string[]
+    local lines = vim.fn.readfile(path)
+    local source = table.concat(lines, "\n")
+    local query = vim.treesitter.query.get(TSLANG, "boilersharp")
+    if query == nil then
+        error("Boilersharp: could not load query")
     end
 
-    local csproj_data = csproj_cache[path]
+    local parser = vim.treesitter.get_string_parser(source, TSLANG)
+    local tree = parser:parse()
+    local root = tree[1]:root()
 
-    if not csproj_data then
-        csproj_data = inspect_csproj(path)
-        csproj_cache[path] = csproj_data
+    ---@type number, number
+    local key_id, value_id
+    for id, capture in pairs(query.captures) do
+        if capture == "key" then
+            key_id = id
+        elseif capture == "value" then
+            value_id = id
+        end
+    end
+
+    ---@type boilersharp.CsprojData
+    local csproj_data = {
+        implicit_usings = false,
+        cs_version = "",
+        target_framework = "default",
+        file_scoped_namespace = false,
+        root_namespace = nil,
+    }
+
+    -- pattern, captures, metadata
+    for _, captures, _ in query:iter_matches(root, source) do
+        local key = vim.treesitter.get_node_text(captures[key_id], source)
+        local value = vim.treesitter.get_node_text(captures[value_id], source)
+        if key == "ImplicitUsings" and value == "enable" then
+            csproj_data.implicit_usings = true
+        elseif key == "LangVersion" then
+            csproj_data.cs_version = value
+        elseif key == "RootNamespace" then
+            csproj_data.root_namespace = value
+        elseif key == "TargetFramework" then
+            csproj_data.target_framework = value
+        end
+    end
+
+    if csproj_data.cs_version == "" then
+        csproj_data.file_scoped_namespace = M.tfm_supports_file_scoped_namespaces(csproj_data.target_framework)
+    else
+        csproj_data.file_scoped_namespace = M.cs_version_supports_file_scoped_namespaces(csproj_data.cs_version)
     end
 
     return csproj_data

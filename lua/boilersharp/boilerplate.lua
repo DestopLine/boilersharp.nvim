@@ -2,6 +2,7 @@ local cs = require("boilersharp.csharp")
 local config = require("boilersharp.config").config
 
 local M = {}
+local H = {}
 
 ---@class boilersharp.Boilerplate
 ---@field usings string[]
@@ -17,14 +18,10 @@ local M = {}
 ---@field type boilersharp.CsharpType
 ---@field name string
 
-local function file_parent(path)
-  return vim.fn.fnamemodify(path, ":p:h")
-end
-
 ---@param path string Path to C# file
 ---@return boilersharp.Boilerplate
 function M.from_file(path)
-    local dir_data = cs.get_dir_data(file_parent(path))
+    local dir_data = cs.get_dir_data(H.file_parent(path))
     local csproj_data = cs.get_csproj_data(dir_data.csproj)
 
     ---@type boilersharp.Boilerplate.Namespace?
@@ -76,33 +73,6 @@ function M.from_file(path)
     }
 end
 
----@param level? integer Times to repeat the indentation. Defaults to 1.
----@return string
-local function get_indentation(level)
-    level = level or 1
-    local is_spaces
-    local indent
-    if config.indent_type == "tabs" then
-        is_spaces = false
-    elseif config.indent_type == "spaces" then
-        is_spaces = true
-    elseif config.indent_type == "auto" then
-        is_spaces = vim.opt.expandtab:get()
-    else
-        error("Boilersharp: Invalid option for indent_type")
-    end
-
-    if is_spaces then
-        -- `repeat` is a lua keyword
-        ---@diagnostic disable-next-line: undefined-field
-        indent = vim.fn["repeat"](" ", vim.opt.shiftwidth:get())
-    else
-        indent = "\t"
-    end
-
-    return vim.fn["repeat"](indent, level)
-end
-
 ---@param boilerplate boilersharp.Boilerplate
 ---@return string
 function M.to_string(boilerplate)
@@ -111,7 +81,7 @@ function M.to_string(boilerplate)
     local indent_level = 0
 
     local function append(text)
-        local indent = get_indentation(indent_level)
+        local indent = H.get_indentation(indent_level)
         local indented = indent .. vim.fn.substitute(
             text,
             "\n" .. [[\(\s*\S\+\)]],
@@ -160,6 +130,37 @@ function M.to_string(boilerplate)
     end
 
     return table.concat(sections, "\n")
+end
+
+function H.file_parent(path)
+  return vim.fn.fnamemodify(path, ":p:h")
+end
+
+---@param level? integer Times to repeat the indentation. Defaults to 1.
+---@return string
+function H.get_indentation(level)
+    level = level or 1
+    local is_spaces
+    local indent
+    if config.indent_type == "tabs" then
+        is_spaces = false
+    elseif config.indent_type == "spaces" then
+        is_spaces = true
+    elseif config.indent_type == "auto" then
+        is_spaces = vim.opt.expandtab:get()
+    else
+        error("Boilersharp: Invalid option for indent_type")
+    end
+
+    if is_spaces then
+        -- `repeat` is a lua keyword
+        ---@diagnostic disable-next-line: undefined-field
+        indent = vim.fn["repeat"](" ", vim.opt.shiftwidth:get())
+    else
+        indent = "\t"
+    end
+
+    return vim.fn["repeat"](indent, level)
 end
 
 return M

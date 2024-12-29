@@ -1,35 +1,13 @@
 local M = {}
+local H = {}
 
 ---@param opts? boilersharp.Config
 function M.setup(opts)
     local config = require("boilersharp.config")
     config.init_config(opts)
 
-    if config.config.add_autocommand then
-        vim.api.nvim_create_autocmd("BufWinEnter", {
-            desc = "Write C# boilerplate when entering an empty C# file",
-            group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
-            pattern = "*.cs",
-            callback = function() M.write_boilerplate() end,
-        })
-    end
-
-    vim.api.nvim_create_user_command(
-        "Boilersharp",
-        function(cmd_opts)
-            local subcommand = cmd_opts.fargs[1]
-            if not subcommand or subcommand == "write" then
-                M.write_boilerplate()
-            elseif subcommand == "clear" then
-                require("boilersharp.csharp").clear_cache()
-            end
-        end,
-        {
-            nargs = "?",
-            desc = "Generate C# namespace, usings and class automatically",
-            complete = function() return { "clear", "write" } end,
-        }
-    )
+    H.add_autocommands()
+    H.add_commands()
 end
 
 ---@param opts? { bufnr: integer, ensure_empty: boolean }
@@ -60,6 +38,36 @@ function M.write_boilerplate(opts)
     local boiler = boilerplate.from_file(path)
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
     vim.api.nvim_buf_set_lines(opts.bufnr, 0, -1, false, lines)
+end
+
+function H.add_autocommands()
+    if require("boilersharp.config").config.add_autocommand then
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            desc = "Write C# boilerplate when entering an empty C# file",
+            group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
+            pattern = "*.cs",
+            callback = function() M.write_boilerplate() end,
+        })
+    end
+end
+
+function H.add_commands()
+    vim.api.nvim_create_user_command(
+        "Boilersharp",
+        function(cmd_opts)
+            local subcommand = cmd_opts.fargs[1]
+            if not subcommand or subcommand == "write" then
+                M.write_boilerplate()
+            elseif subcommand == "clear" then
+                require("boilersharp.csharp").clear_cache()
+            end
+        end,
+        {
+            nargs = "?",
+            desc = "Generate C# namespace, usings and class automatically",
+            complete = function() return { "clear", "write" } end,
+        }
+    )
 end
 
 return M
