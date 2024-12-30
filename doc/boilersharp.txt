@@ -166,10 +166,10 @@ boilersharp.write_boilerplate({opts})        *boilersharp.write_boilerplate()*
 
     Parameters: ~
       - {opts}  (`table?`) Optional parameters:
-                - bufnr: (`integer?`) Buffer to write boilerplate to. Defaults to
-                  `0` (current buffer).
-                - ensure_empty: (`boolean?`) Only write to the buffer when it is
-                  empty. Defaults to `true`.
+                - bufnr: (`integer?`) Buffer to write boilerplate to.
+                  Defaults to `0` (current buffer).
+                - ensure_empty: (`boolean?`) Only write to the buffer when it
+                  is empty. Defaults to `true`.
 
 boilersharp.csharp.clear_cache()            *boilersharp.csharp.clear_cache()*
     Clears cached directories and csproj files.
