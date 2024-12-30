@@ -1,0 +1,196 @@
+*boilersharp.txt*
+*boilersharp.nvim*
+*boilersharp*
+
+==============================================================================
+Contents                                                *boilersharp-contents*
+
+    1. Introduction                                        |boilersharp-intro|
+    2. Usage                                               |boilersharp-usage|
+    3. Configuration                                      |boilersharp-config|
+    4. Functions                                       |boilersharp-functions|
+    5. Commands                                         |boilersharp-commands|
+
+==============================================================================
+1. Introduction                                            *boilersharp-intro*
+
+Boilersharp.nvim is a plugin that automatically generates and writes C#
+boilerplate when you create a file inside a C# project. To be more specific,
+boilersharp auto-generates usings, namespace and type declaration for you,
+while taking into account to the best of its abilities the version of C# that
+your project uses in order to generate boilerplate with modern features.
+
+Features:
+- Enable or disable boilerplate sections.
+- Add usings only when project is not using implicit usings.
+- Automatically detect namespace.
+- Customize access modifiers (public, private, internal...).
+- Customize keyword for type declaration (class, record, struct...).
+- Infer whether the file is an interface from the file name.
+
+Requirements:
+- Neovim >= 0.10.0.
+- Treesitter parser for xml.
+
+
+==============================================================================
+2. Usage                                                   *boilersharp-usage*
+
+Using boilersharp is as simple as creating a file on a C# project and opening
+it. The plugin will then gather information about the csproj, cache that
+information, process it and write the boilerplate.
+
+The same behavior can be achieved manually by using
+|boilersharp.write_boilerplate()| or |:Boilersharp|.
+
+
+==============================================================================
+3. Configuration                                          *boilersharp-config*
+
+You can configure boilersharp's behavior by passing a table with options to
+|boilersharp.setup()|.
+
+Example:
+>lua
+    require("boilersharp").setup({
+        usings = false,
+        namespace = {
+            use_file_scoped = "never",
+        },
+    })
+<
+
+Default configuration                             *boilersharp-default-config*
+>lua
+    {
+        ---Information about the usings section of the boilerplate.
+        ---This can be set to `false` to disable the section altogether.
+        ---@class boilersharp.FullConfig.Usings
+        usings = {
+            ---When to use assume that the project uses implicit usings.
+            ---Set this to "auto" to get this from the C# version infered from
+            ---the csproj file of the project.
+            ---@type "never" | "always" | "auto"
+            implicit_usings = "auto",
+
+            ---Usings to automatically add to the file when needed.
+            ---You could set this to { "System" } to only include the System
+            ---namespace.
+            ---@type string[]
+            usings = {
+                "System",
+                "System.Collections.Generic",
+                "System.IO",
+                "System.Linq",
+                "System.Net.Http",
+                "System.Threading",
+                "System.Threading.Tasks",
+            },
+        },
+
+        ---Information about the namespace section of the boilerplate.
+        ---This can be set to `false` to disable the section altogether.
+        ---@class boilersharp.FullConfig.Namespace
+        namespace = {
+            ---When to use file scoped namespace syntax.
+            ---Set this to "auto" to get this from the C# version infered from
+            ---the csproj file of the project.
+            ---@type "never" | "always" | "auto"
+            use_file_scoped = "auto",
+        },
+
+        ---Information about the type declaration section of the boilerplate.
+        ---This can be set to `false` to disable the section altogether.
+        ---@class boilersharp.FullConfig.TypeDefinition
+        type_definition = {
+            ---Access modifier to use when writing boilerplate.
+            ---@type boilersharp.AccessModifier
+            default_access_modifier = "public",
+
+            ---C# keyword to use when defining the type.
+            ---@type boilersharp.CsharpType
+            default_type = "class",
+
+            ---Whether the plugin should use the `interface` keyword for the
+            ---type declaration when the name of the type matches the C#
+            ---interface naming convention, which would be equivalent to this
+            ---regular expression: `^I[A-Z].*$`.
+            ---@type boolean
+            infer_interfaces = true,
+        },
+
+        ---Whether to add autocommands for writing boilerplate when you enter
+        ---an empty C# file. Set this to `false` if you wanna be in control
+        ---of when boilerplate gets written to the file through user commands
+        ---or lua functions.
+        ---@type boolean
+        add_autocommand = true,
+
+        ---What type of indentation to use for boilerplate generation. This is
+        ---only ever used when not using file scoped namespace syntax and
+        ---`type_definition` is enabled. Set this to "auto" to take this from
+        ---the buffer's options. 
+        ---
+        ---It is recommended that you set up an "after/ftplugin/cs.lua" file
+        ---in your nvim config with options for `expandtab` instead of
+        ---changing this option from its default value.
+        ---See `:h ftplugin` and `:h after-directory`.
+        ---@type "tabs" | "spaces" | "auto"
+        indent_type = "auto",
+    }
+<
+
+==============================================================================
+4. Functions                                           *boilersharp-functions*
+
+boilersharp.setup({opts})                                *boilersharp.setup()*
+    Adds commands, autocommands and applies user configuration.
+
+    Usage: ~
+    >lua
+        require("boilersharp").setup()
+<
+        or
+    >lua
+        require("boilersharp").setup({
+            -- Your options go here
+        })
+<
+    
+    Parameters: ~
+      - {opts}  (`table?`): Configuration options.
+                See |boilersharp-default-config| for all options.
+
+boilersharp.write_boilerplate({opts})        *boilersharp.write_boilerplate()*
+    Writes boilerplate to a buffer.
+
+    Parameters: ~
+      - {opts}  (`table?`) Optional parameters:
+                - bufnr: (`integer`) Buffer to write boilerplate to. Defaults to
+                  `0` (current buffer).
+                - ensure_empty: (`boolean`) Only write to the buffer when it is
+                  empty. Defaults to `true`.
+
+boilersharp.csharp.clear_cache()            *boilersharp.csharp.clear_cache()*
+    Clears cached directories and csproj files.
+
+    Useful for when you change properties of the csproj file on your
+    project, specifically the ones in the PropertyGroup tag.
+
+    Usage: ~
+    >lua
+        require("boilersharp.csharp").clear_cache()
+<
+
+==============================================================================
+5. Commands                                             *boilersharp-commands*
+
+:Boilersharp [{subcommand}]                                     *:Boilersharp*
+    Without arguments, runs the 'write' subcommand.
+
+    Subcommands: ~
+      - write: Writes boilerplate to the current buffer.
+      - clear: Clears the cache. See |boilersharp.csharp.clear_cache()|.
+
+
+vim:tw=78:ts=8:et:ft=help:norl:
