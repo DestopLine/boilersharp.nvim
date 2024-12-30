@@ -12,7 +12,7 @@ function M.setup(opts)
 end
 
 ---Writes boilerplate to a C# file.
----@param opts? { bufnr: integer, ensure_empty: boolean }
+---@param opts? { bufnr?: integer, ensure_empty?: boolean }
 function M.write_boilerplate(opts)
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
