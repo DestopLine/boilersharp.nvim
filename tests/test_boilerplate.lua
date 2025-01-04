@@ -318,6 +318,31 @@ T["to_string()"] = test.new_set({
                 "}",
             }, "\n"),
         },
+        {
+            {
+                usings = {
+                    implicit_usings = "always",
+                },
+                namespace = {
+                    use_file_scoped = "always",
+                },
+                type_definition = {
+                    default_access_modifier = false,
+                    default_type = "class",
+                },
+                indent_type = "spaces",
+            },
+            "/MyApi/Controllers/WeatherController.cs",
+            modern_project,
+            { namespace = "MyApi.Controllers" },
+            table.concat({
+                "namespace MyApi.Controllers;",
+                "",
+                "class WeatherController",
+                "{",
+                "}",
+            }, "\n"),
+        },
     },
 })
 

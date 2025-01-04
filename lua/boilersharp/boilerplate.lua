@@ -17,7 +17,7 @@ local H = {}
 
 ---Information about the type in the boilerplate.
 ---@class boilersharp.Boilerplate.Type
----@field access_modifier boilersharp.AccessModifier Access modifier that will be used when writing the boilerplate.
+---@field access_modifier boilersharp.AccessModifier | false Access modifier that will be used when writing the boilerplate or `false` to not use any access modifier.
 ---@field type boilersharp.CsharpType Keyword that will be used to declare the typed when writing the boilerplate.
 ---@field name string Name of the type used when writing boilerplate.
 
@@ -121,8 +121,15 @@ function M.to_string(boilerplate)
     end
 
     if boilerplate.type then
-        append(("%s %s %s\n{"):format(
-            boilerplate.type.access_modifier,
+        local access_modifier
+        if boilerplate.type.access_modifier then
+            access_modifier = boilerplate.type.access_modifier .. " "
+        else
+            access_modifier = ""
+        end
+
+        append(("%s%s %s\n{"):format(
+            access_modifier,
             boilerplate.type.type,
             boilerplate.type.name
         ))

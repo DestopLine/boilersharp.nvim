@@ -15,7 +15,7 @@ local M = {}
 ---@field use_file_scoped? "never" | "always" | "auto"
 
 ---@class boilersharp.Config.TypeDefinition
----@field default_access_modifier? boilersharp.AccessModifier
+---@field default_access_modifier? boilersharp.AccessModifier | false
 ---@field default_type? boilersharp.CsharpType
 ---@field infer_interfaces? boolean
 
@@ -67,8 +67,9 @@ M.DEFAULT = {
     ---This can be set to `false` to disable the section altogether.
     ---@class boilersharp.FullConfig.TypeDefinition
     type_definition = {
-        ---Access modifier to use when writing boilerplate.
-        ---@type boilersharp.AccessModifier
+        ---Access modifier to use when writing boilerplate. Set this to
+        ---`false` to not use any access modifier (implicitly `internal`).
+        ---@type boilersharp.AccessModifier | false
         default_access_modifier = "public",
 
         ---C# keyword to use when defining the type.
