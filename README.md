@@ -199,8 +199,9 @@ namespace VeryOldProject
   ---This can be set to `false` to disable the section altogether.
   ---@type boilersharp.Config.TypeDefinition
   type_definition = {
-    ---Access modifier to use when writing boilerplate.
-    ---@type boilersharp.AccessModifier
+    ---Access modifier to use when writing boilerplate. Set this to
+    ---`false` to not use any access modifier (implicitly `internal`).
+    ---@type "public" | "internal" | "file" | false
     default_access_modifier = "public",
 
     ---C# keyword to use when defining the type.
