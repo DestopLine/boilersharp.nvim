@@ -6,11 +6,7 @@ local H = {}
 ---[Access modifiers](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/access-modifiers) used in C#.
 ---@alias boilersharp.AccessModifier
 ---| "public"
----| "protected"
----| "private"
 ---| "internal"
----| "protected internal"
----| "private protected"
 ---| "file"
 
 ---C# keywords used to declare types.

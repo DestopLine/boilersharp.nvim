@@ -9,7 +9,7 @@ Features:
 - Enable or disable boilerplate sections.
 - Add usings only when project is not using implicit usings.
 - Automatically detect namespace.
-- Customize access modifiers (public, private, internal...).
+- Customize access modifiers (public, internal or file).
 - Customize keyword for type declaration (class, record, struct...).
 - Infer whether the file is an interface from the file name.
 

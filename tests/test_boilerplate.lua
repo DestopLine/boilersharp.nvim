@@ -302,7 +302,7 @@ T["to_string()"] = test.new_set({
                     use_file_scoped = "always",
                 },
                 type_definition = {
-                    default_access_modifier = "protected internal",
+                    default_access_modifier = "file",
                     default_type = "record struct",
                 },
                 indent_type = "spaces",
@@ -313,7 +313,7 @@ T["to_string()"] = test.new_set({
             table.concat({
                 "namespace MyApi.Controllers;",
                 "",
-                "protected internal record struct WeatherController",
+                "file record struct WeatherController",
                 "{",
                 "}",
             }, "\n"),
