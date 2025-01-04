@@ -197,14 +197,14 @@ namespace VeryOldProject
 
   ---Information about the type declaration section of the boilerplate.
   ---This can be set to `false` to disable the section altogether.
-  ---@type boilersharp.Config.TypeDefinition
-  type_definition = {
+  ---@type boilersharp.Config.TypeDeclaration
+  type_declaration = {
     ---Access modifier to use when writing boilerplate. Set this to
     ---`false` to not use any access modifier (implicitly `internal`).
     ---@type "public" | "internal" | "file" | false
     default_access_modifier = "public",
 
-    ---C# keyword to use when defining the type.
+    ---C# keyword to use when declaring the type.
     ---@type boilersharp.CsharpType
     default_type = "class",
 
@@ -225,7 +225,7 @@ namespace VeryOldProject
 
   ---What type of indentation to use for boilerplate generation. This is
   ---only ever used when not using file scoped namespace syntax and
-  ---`type_definition` is enabled. Set this to "auto" to take this from
+  ---`type_declaration` is enabled. Set this to "auto" to take this from
   ---the buffer's options. 
   ---
   ---It is recommended that you set up an "after/ftplugin/cs.lua" file

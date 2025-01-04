@@ -10,7 +10,7 @@ local H = {}
 ---| "file"
 
 ---C# keywords used to declare types.
----@alias boilersharp.CsharpType
+---@alias boilersharp.TypeKeyword
 ---| "class"
 ---| "struct"
 ---| "interface"

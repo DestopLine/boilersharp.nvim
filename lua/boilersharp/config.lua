@@ -3,7 +3,7 @@ local M = {}
 ---@class boilersharp.Config
 ---@field usings? boilersharp.Config.Usings | false
 ---@field namespace? boilersharp.Config.Namespace | false
----@field type_definition? boilersharp.Config.TypeDefinition | false
+---@field type_declaration? boilersharp.Config.TypeDeclaration | false
 ---@field add_autocommand? boolean
 ---@field indent_type? "tabs" | "spaces" | "auto"
 
@@ -14,15 +14,15 @@ local M = {}
 ---@class boilersharp.Config.Namespace
 ---@field use_file_scoped? "never" | "always" | "auto"
 
----@class boilersharp.Config.TypeDefinition
+---@class boilersharp.Config.TypeDeclaration
 ---@field default_access_modifier? boilersharp.AccessModifier | false
----@field default_type? boilersharp.CsharpType
+---@field default_type_keyword? boilersharp.TypeKeyword
 ---@field infer_interfaces? boolean
 
 ---@class boilersharp.FullConfig
 ---@field usings boilersharp.FullConfig.Usings | false
 ---@field namespace boilersharp.FullConfig.Namespace | false
----@field type_definition boilersharp.FullConfig.TypeDefinition | false
+---@field type_declaration boilersharp.FullConfig.TypeDeclaration | false
 ---@field add_autocommand boolean
 ---@field indent_type "tabs" | "spaces" | "auto"
 
@@ -65,16 +65,16 @@ M.DEFAULT = {
 
     ---Information about the type declaration section of the boilerplate.
     ---This can be set to `false` to disable the section altogether.
-    ---@class boilersharp.FullConfig.TypeDefinition
-    type_definition = {
+    ---@class boilersharp.FullConfig.TypeDeclaration
+    type_declaration = {
         ---Access modifier to use when writing boilerplate. Set this to
         ---`false` to not use any access modifier (implicitly `internal`).
         ---@type boilersharp.AccessModifier | false
         default_access_modifier = "public",
 
-        ---C# keyword to use when defining the type.
-        ---@type boilersharp.CsharpType
-        default_type = "class",
+        ---C# keyword to use when declaring the type.
+        ---@type boilersharp.TypeKeyword
+        default_type_keyword = "class",
 
         ---Whether the plugin should use the `interface` keyword for the
         ---type declaration when the name of the type matches the C#
@@ -93,7 +93,7 @@ M.DEFAULT = {
 
     ---What type of indentation to use for boilerplate generation. This is
     ---only ever used when not using file scoped namespace syntax and
-    ---`type_definition` is enabled. Set this to "auto" to take this from
+    ---`type_declaration` is enabled. Set this to "auto" to take this from
     ---the buffer's options. 
     ---
     ---It is recommended that you set up an "after/ftplugin/cs.lua" file

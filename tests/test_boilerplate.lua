@@ -107,7 +107,7 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "auto",
                 },
-                type_definition = false,
+                type_declaration = false,
                 indent_type = "spaces",
             },
             "/MyApi/Controllers/WeatherController.cs",
@@ -133,7 +133,7 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "auto",
                 },
-                type_definition = false,
+                type_declaration = false,
                 indent_type = "spaces",
             },
             "/MyApi/Controllers/WeatherController.cs",
@@ -151,7 +151,7 @@ T["to_string()"] = test.new_set({
                     implicit_usings = "auto",
                 },
                 namespace = false,
-                type_definition = false,
+                type_declaration = false,
                 indent_type = "spaces",
             },
             "/MyApi/Controllers/WeatherController.cs",
@@ -171,7 +171,7 @@ T["to_string()"] = test.new_set({
             {
                 usings = false,
                 namespace = false,
-                type_definition = false,
+                type_declaration = false,
                 indent_type = "spaces",
             },
             "/MyApi/Controllers/WeatherController.cs",
@@ -183,7 +183,7 @@ T["to_string()"] = test.new_set({
             {
                 usings = false,
                 namespace = false,
-                type_definition = {},
+                type_declaration = {},
                 indent_type = "spaces",
             },
             "/MyApi/Controllers/WeatherController.cs",
@@ -204,7 +204,7 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
+                type_declaration = {
                     infer_interfaces = true,
                 },
                 indent_type = "spaces",
@@ -228,7 +228,7 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
+                type_declaration = {
                     infer_interfaces = true,
                 },
                 indent_type = "spaces",
@@ -252,7 +252,7 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
+                type_declaration = {
                     default_access_modifier = "internal",
                 },
                 indent_type = "spaces",
@@ -277,8 +277,8 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
-                    default_type = "record",
+                type_declaration = {
+                    default_type_keyword = "record",
                 },
                 indent_type = "spaces",
             },
@@ -301,9 +301,9 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
+                type_declaration = {
                     default_access_modifier = "file",
-                    default_type = "record struct",
+                    default_type_keyword = "record struct",
                 },
                 indent_type = "spaces",
             },
@@ -326,9 +326,9 @@ T["to_string()"] = test.new_set({
                 namespace = {
                     use_file_scoped = "always",
                 },
-                type_definition = {
+                type_declaration = {
                     default_access_modifier = false,
-                    default_type = "class",
+                    default_type_keyword = "class",
                 },
                 indent_type = "spaces",
             },

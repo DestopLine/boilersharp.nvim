@@ -101,16 +101,16 @@ Default configuration                             *boilersharp-default-config*
 
         ---Information about the type declaration section of the boilerplate.
         ---This can be set to `false` to disable the section altogether.
-        ---@class boilersharp.FullConfig.TypeDefinition
-        type_definition = {
+        ---@class boilersharp.FullConfig.TypeDeclaration
+        type_declaration = {
             ---Access modifier to use when writing boilerplate. Set this to
             ---`false` to not use any access modifier (implicitly `internal`).
             ---@type boilersharp.AccessModifier | false
             default_access_modifier = "public",
 
-            ---C# keyword to use when defining the type.
+            ---C# keyword to use when declaring the type.
             ---@type boilersharp.CsharpType
-            default_type = "class",
+            default_type_keyword = "class",
 
             ---Whether the plugin should use the `interface` keyword for the
             ---type declaration when the name of the type matches the C#
@@ -129,7 +129,7 @@ Default configuration                             *boilersharp-default-config*
 
         ---What type of indentation to use for boilerplate generation. This is
         ---only ever used when not using file scoped namespace syntax and
-        ---`type_definition` is enabled. Set this to "auto" to take this from
+        ---`type_declaration` is enabled. Set this to "auto" to take this from
         ---the buffer's options. 
         ---
         ---It is recommended that you set up an "after/ftplugin/cs.lua" file

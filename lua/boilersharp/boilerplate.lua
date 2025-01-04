@@ -8,7 +8,7 @@ local H = {}
 ---@class boilersharp.Boilerplate
 ---@field usings string[] Namespaces to use for usings.
 ---@field namespace? boilersharp.Boilerplate.Namespace
----@field type? boilersharp.Boilerplate.Type 
+---@field type_declaration? boilersharp.Boilerplate.TypeDeclaration 
 
 ---Information about the namespace in the boilerplate.
 ---@class boilersharp.Boilerplate.Namespace
@@ -16,9 +16,9 @@ local H = {}
 ---@field namespace string Namespace used for the boilerplate.
 
 ---Information about the type in the boilerplate.
----@class boilersharp.Boilerplate.Type
+---@class boilersharp.Boilerplate.TypeDeclaration
 ---@field access_modifier boilersharp.AccessModifier | false Access modifier that will be used when writing the boilerplate or `false` to not use any access modifier.
----@field type boilersharp.CsharpType Keyword that will be used to declare the typed when writing the boilerplate.
+---@field type_keyword boilersharp.TypeKeyword Keyword that will be used to declare the typed when writing the boilerplate.
 ---@field name string Name of the type used when writing boilerplate.
 
 ---Takes a path to a file and returns a `boilersharp.Boilerplate`.
@@ -50,30 +50,30 @@ function M.from_file(path)
         namespace = nil
     end
 
-    ---@type boilersharp.Boilerplate.Type?
-    local type_
-    if config.type_definition then
-        local cs_type = config.type_definition.default_type
+    ---@type boilersharp.Boilerplate.TypeDeclaration?
+    local type_declaration
+    if config.type_declaration then
+        local cs_type = config.type_declaration.default_type_keyword
         local name = cs.get_type_name(path)
 
-        if config.type_definition.infer_interfaces and name:match("^I[A-Z].*$") then
+        if config.type_declaration.infer_interfaces and name:match("^I[A-Z].*$") then
             cs_type = "interface"
         end
 
-        type_ = {
-            access_modifier = config.type_definition.default_access_modifier,
-            type = cs_type,
+        type_declaration = {
+            access_modifier = config.type_declaration.default_access_modifier,
+            type_keyword = cs_type,
             name = name,
         }
     else
-        type_ = nil
+        type_declaration = nil
     end
 
     ---@type boilersharp.Boilerplate
     return {
         usings = cs.get_usings(dir_data.csproj),
         namespace = namespace,
-        type = type_,
+        type_declaration = type_declaration,
     }
 end
 
@@ -103,7 +103,7 @@ function M.to_string(boilerplate)
         end
         append(table.concat(usings, "\n"))
 
-        if boilerplate.namespace or boilerplate.type then
+        if boilerplate.namespace or boilerplate.type_declaration then
             append("")
         end
     end
@@ -111,7 +111,7 @@ function M.to_string(boilerplate)
     if boilerplate.namespace then
         if boilerplate.namespace.file_scoped then
             append("namespace " .. boilerplate.namespace.namespace .. ";")
-            if boilerplate.type then
+            if boilerplate.type_declaration then
                 append("")
             end
         else
@@ -120,18 +120,18 @@ function M.to_string(boilerplate)
         end
     end
 
-    if boilerplate.type then
+    if boilerplate.type_declaration then
         local access_modifier
-        if boilerplate.type.access_modifier then
-            access_modifier = boilerplate.type.access_modifier .. " "
+        if boilerplate.type_declaration.access_modifier then
+            access_modifier = boilerplate.type_declaration.access_modifier .. " "
         else
             access_modifier = ""
         end
 
         append(("%s%s %s\n{"):format(
             access_modifier,
-            boilerplate.type.type,
-            boilerplate.type.name
+            boilerplate.type_declaration.type_keyword,
+            boilerplate.type_declaration.name
         ))
         indent_level = indent_level + 1
     end
