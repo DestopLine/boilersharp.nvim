@@ -29,7 +29,7 @@ extra parameters. See `:h boilersharp.write_boilerplate()`.
 If you ever modify the `PropertyGroup` tag in your csproj file in a way that
 may change the behavior of the plugin in any relevant way, you can clear the
 plugin's cache by running the `:Boilersharp clear` command or the
-`require("boilersharp.csharp").clear()` function.
+`require("boilersharp").clear_cache()` function.
 
 ## Examples
 Namespace and type declaration are generated with modern syntax:

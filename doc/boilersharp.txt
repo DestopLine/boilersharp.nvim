@@ -172,7 +172,7 @@ boilersharp.write_boilerplate({opts})        *boilersharp.write_boilerplate()*
                 - ensure_empty: (`boolean?`) Only write to the buffer when it
                   is empty. Defaults to `true`.
 
-boilersharp.csharp.clear_cache()            *boilersharp.csharp.clear_cache()*
+boilersharp.clear_cache()            *boilersharp.clear_cache()*
     Clears cached directories and csproj files.
 
     Useful for when you change properties of the csproj file on your
@@ -180,7 +180,7 @@ boilersharp.csharp.clear_cache()            *boilersharp.csharp.clear_cache()*
 
     Usage: ~
     >lua
-        require("boilersharp.csharp").clear_cache()
+        require("boilersharp").clear_cache()
 <
 
 ==============================================================================
@@ -191,7 +191,7 @@ boilersharp.csharp.clear_cache()            *boilersharp.csharp.clear_cache()*
 
     Subcommands: ~
       - write: Writes boilerplate to the current buffer.
-      - clear: Clears the cache. See |boilersharp.csharp.clear_cache()|.
+      - clear: Clears the cache. See |boilersharp.clear_cache()|.
 
 
 vim:tw=78:ts=8:et:ft=help:norl:

@@ -42,6 +42,11 @@ function M.write_boilerplate(opts)
     vim.api.nvim_buf_set_lines(opts.bufnr, 0, -1, false, lines)
 end
 
+---Clears cached directories and csproj files.
+function M.clear_cache()
+    require("boilersharp.csharp").clear_cache()
+end
+
 function H.add_autocommands()
     if require("boilersharp.config").config.add_autocommand then
         vim.api.nvim_create_autocmd("BufWinEnter", {
@@ -61,7 +66,7 @@ function H.add_commands()
             if not subcommand or subcommand == "write" then
                 M.write_boilerplate()
             elseif subcommand == "clear" then
-                require("boilersharp.csharp").clear_cache()
+                M.clear_cache()
             end
         end,
         {
