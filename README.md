@@ -164,7 +164,7 @@ namespace VeryOldProject
   ---@type boilersharp.Config.Usings | false
   usings = {
     ---When to use assume that the project uses implicit usings.
-    ---Set this to "auto" to get this from the C# version infered from
+    ---Set this to "auto" to get this from the C# version inferred from
     ---the csproj file of the project.
     ---@type "never" | "always" | "auto"
     implicit_usings = "auto",
@@ -189,7 +189,7 @@ namespace VeryOldProject
   ---@type boilersharp.Config.Namespace | false
   namespace = {
     ---When to use file scoped namespace syntax.
-    ---Set this to "auto" to get this from the C# version infered from
+    ---Set this to "auto" to get this from the C# version inferred from
     ---the csproj file of the project.
     ---@type "never" | "always" | "auto"
     use_file_scoped = "auto",
@@ -206,7 +206,7 @@ namespace VeryOldProject
 
     ---C# keyword to use when declaring the type.
     ---@type boilersharp.CsharpType
-    default_type = "class",
+    default_type_declaration = "class",
 
     ---Whether the plugin should use the `interface` keyword for the
     ---type declaration when the name of the type matches the C#

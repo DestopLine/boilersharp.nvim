@@ -32,7 +32,7 @@ M.DEFAULT = {
     ---@class boilersharp.FullConfig.Usings
     usings = {
         ---When to use assume that the project uses implicit usings.
-        ---Set this to "auto" to get this from the C# version infered from
+        ---Set this to "auto" to get this from the C# version inferred from
         ---the csproj file of the project.
         ---@type "never" | "always" | "auto"
         implicit_usings = "auto",
@@ -57,7 +57,7 @@ M.DEFAULT = {
     ---@class boilersharp.FullConfig.Namespace
     namespace = {
         ---When to use file scoped namespace syntax.
-        ---Set this to "auto" to get this from the C# version infered from
+        ---Set this to "auto" to get this from the C# version inferred from
         ---the csproj file of the project.
         ---@type "never" | "always" | "auto"
         use_file_scoped = "auto",
