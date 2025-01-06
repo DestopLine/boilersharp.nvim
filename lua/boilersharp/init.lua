@@ -20,7 +20,7 @@ function M.setup(opts)
 end
 
 ---Writes boilerplate to a C# file.
----@param opts? { bufnr?: integer, ensure_empty?: boolean }
+---@param opts? { bufnr?: integer, ensure_empty?: boolean, behavior?: "prepend" | "append" | "replace" }
 function M.write_boilerplate(opts)
     if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
         vim.notify(
@@ -33,18 +33,17 @@ function M.write_boilerplate(opts)
 
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
+    opts.behavior = opts.behavior or "prepend"
     if opts.ensure_empty == nil then
         opts.ensure_empty = true
     end
 
-    if opts.ensure_empty then
-        if vim.api.nvim_buf_line_count(opts.bufnr) > 1 then
-            return
-        end
+    local is_buffer_empty =
+        vim.api.nvim_buf_line_count(opts.bufnr) <= 1
+        and #vim.api.nvim_buf_get_lines(opts.bufnr, 0, 1, false)[1] == 0
 
-        if #vim.api.nvim_buf_get_lines(opts.bufnr, 0, 1, false)[1] > 0 then
-            return
-        end
+    if opts.ensure_empty and not is_buffer_empty then
+        return
     end
 
     local name, _ = vim.filetype.match({ buf = opts.bufnr })
@@ -60,7 +59,20 @@ function M.write_boilerplate(opts)
         return
     end
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
-    vim.api.nvim_buf_set_lines(opts.bufnr, 0, -1, false, lines)
+
+    ---@type number, number
+    local start, stop
+    if is_buffer_empty or opts.behavior == "replace" then
+        start = 0
+        stop = -1
+    elseif opts.behavior == "prepend" then
+        start = 0
+        stop = 0
+    elseif opts.behavior == "append" then
+        start = -1
+        stop = -1
+    end
+    vim.api.nvim_buf_set_lines(opts.bufnr, start, stop, false, lines)
 end
 
 ---Clears cached directories and csproj files.
