@@ -25,7 +25,8 @@ local H = {}
 
 ---Data related to a csproj file.
 ---@class boilersharp.CsprojData
----@field target_framework string Version of dotnet used. Equivalent to TargetFramework tag.
+---@field target_framework? string Version of dotnet used. Equivalent to TargetFramework tag.
+---@field target_frameworks? string[] Versions of dotnet used. Equivalent to TargetFrameworks tag.
 ---@field cs_version string Version of C# used. Equivalent to LangVer tag.
 ---@field implicit_usings boolean Whether or not the project uses implicit usings.
 ---@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces.
@@ -134,6 +135,14 @@ function M.tfm_supports_file_scoped_namespaces(tfm)
     return tonumber(version) >= 6
 end
 
+---Returns whether or not all of the specified Target Frameworks support file scoped
+---namespace syntax when no LangVer tag is specified in csproj file.
+---@param tfms string[] [Target Framework](https://learn.microsoft.com/en-us/dotnet/standard/frameworks)
+---@return boolean
+function M.tfms_support_file_scoped_namespaces(tfms)
+    return vim.iter(tfms):all(M.tfm_supports_file_scoped_namespaces)
+end
+
 ---Gets the name of the C# type that goes in the specified file.
 ---@param path? string Path of the C# file.
 ---@return string
@@ -212,7 +221,8 @@ function H.inspect_csproj(path)
     local csproj_data = {
         implicit_usings = false,
         cs_version = "",
-        target_framework = "default",
+        target_framework = nil,
+        target_frameworks = nil,
         file_scoped_namespace = false,
         root_namespace = nil,
     }
@@ -229,11 +239,17 @@ function H.inspect_csproj(path)
             csproj_data.root_namespace = value
         elseif key == "TargetFramework" then
             csproj_data.target_framework = value
+        elseif key == "TargetFrameworks" then
+            csproj_data.target_frameworks = vim.split(value, ";")
         end
     end
 
     if csproj_data.cs_version == "" then
-        csproj_data.file_scoped_namespace = M.tfm_supports_file_scoped_namespaces(csproj_data.target_framework)
+        if csproj_data.target_framework then
+            csproj_data.file_scoped_namespace = M.tfm_supports_file_scoped_namespaces(csproj_data.target_framework)
+        elseif csproj_data.target_frameworks then
+            csproj_data.file_scoped_namespace = M.tfms_support_file_scoped_namespaces(csproj_data.target_frameworks)
+        end
     else
         csproj_data.file_scoped_namespace = M.cs_version_supports_file_scoped_namespaces(csproj_data.cs_version)
     end

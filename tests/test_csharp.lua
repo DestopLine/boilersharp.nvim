@@ -177,6 +177,41 @@ T["get_csproj_data()"] = test.new_set({
                 root_namespace = "Hello.World",
             },
         },
+        {
+            {
+                [[<Project Sdk="Microsoft.NET.Sdk">]],
+                [[  <PropertyGroup>]],
+                [[    <TargetFrameworks>net5.0;net8.0</TargetFrameworks>]],
+                [[    <Nullable>enable</Nullable>]],
+                [[  </PropertyGroup>]],
+                [[</Project>]],
+            },
+            {
+                implicit_usings = false,
+                cs_version = "",
+                target_framework = nil,
+                target_frameworks = { "net5.0", "net8.0" },
+                file_scoped_namespace = false,
+            },
+        },
+        {
+            {
+                [[<Project Sdk="Microsoft.NET.Sdk">]],
+                [[  <PropertyGroup>]],
+                [[    <TargetFrameworks>net6.0;net9.0</TargetFrameworks>]],
+                [[    <Nullable>enable</Nullable>]],
+                [[    <ImplicitUsings>enable</ImplicitUsings>]],
+                [[  </PropertyGroup>]],
+                [[</Project>]],
+            },
+            {
+                implicit_usings = true,
+                cs_version = "",
+                target_framework = nil,
+                target_frameworks = { "net6.0", "net9.0" },
+                file_scoped_namespace = true,
+            },
+        }
     },
 })
 
