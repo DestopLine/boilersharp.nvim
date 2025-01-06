@@ -171,6 +171,9 @@ boilersharp.write_boilerplate({opts})        *boilersharp.write_boilerplate()*
                   Defaults to `0` (current buffer).
                 - ensure_empty: (`boolean?`) Only write to the buffer when it
                   is empty. Defaults to `true`.
+                - behavior: (`("append" | "prepend" | "replace")?`) Whether
+                  to append to, prepend to, or replace the current file
+                  contents. Defaults to `"prepend"`.
 
 boilersharp.clear_cache()            *boilersharp.clear_cache()*
     Clears cached directories and csproj files.
