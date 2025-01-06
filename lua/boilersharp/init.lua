@@ -4,6 +4,14 @@ local H = {}
 ---Initializes and configures the plugin.
 ---@param opts? boilersharp.Config Configuration options.
 function M.setup(opts)
+    if vim.fn.has("nvim-0.10.0") == 0 then
+        vim.notify(
+            "boilersharp.nvim requires nvim 0.10.0 or greater",
+            vim.log.levels.ERROR,
+            { title = "boilersharp" }
+        )
+    end
+
     local config = require("boilersharp.config")
     config.init_config(opts)
 
