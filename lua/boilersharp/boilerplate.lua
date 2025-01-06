@@ -22,10 +22,14 @@ local H = {}
 ---@field name string Name of the type used when writing boilerplate.
 
 ---Takes a path to a file and returns a `boilersharp.Boilerplate`.
+---Returns nil if the file is not within a project.
 ---@param path string Path to C# file.
----@return boilersharp.Boilerplate
+---@return boilersharp.Boilerplate?
 function M.from_file(path)
     local dir_data = cs.get_dir_data(H.file_parent(path))
+    if not dir_data.csproj then
+        return nil
+    end
     local csproj_data = cs.get_csproj_data(dir_data.csproj)
 
     ---@type boilersharp.Boilerplate.Namespace?

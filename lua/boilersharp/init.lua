@@ -46,6 +46,10 @@ function M.write_boilerplate(opts)
 
     local boilerplate = require("boilersharp.boilerplate")
     local boiler = boilerplate.from_file(path)
+    if not boiler then
+        vim.notify("boilersharp: Couldn't find csproj file.", vim.log.levels.WARN)
+        return
+    end
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
     vim.api.nvim_buf_set_lines(opts.bufnr, 0, -1, false, lines)
 end
