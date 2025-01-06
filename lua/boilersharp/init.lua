@@ -16,8 +16,9 @@ end
 function M.write_boilerplate(opts)
     if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
         vim.notify(
-            "boilersharp: Treesitter parser for xml not found. Cannot generate boilerplate.",
-            vim.log.levels.ERROR
+            "Treesitter parser for xml not found, cannot generate boilerplate",
+            vim.log.levels.ERROR,
+            { title = "boilersharp" }
         )
         return
     end
@@ -47,7 +48,7 @@ function M.write_boilerplate(opts)
     local boilerplate = require("boilersharp.boilerplate")
     local boiler = boilerplate.from_file(path)
     if not boiler then
-        vim.notify("boilersharp: Couldn't find csproj file.", vim.log.levels.WARN)
+        vim.notify("Couldn't find csproj file", vim.log.levels.WARN, { title = "boilersharp" })
         return
     end
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
@@ -80,7 +81,7 @@ function H.add_commands()
             elseif subcommand == "clear" then
                 M.clear_cache()
             else
-                vim.notify("boilersharp: Invalid subcommand.", vim.log.levels.ERROR)
+                vim.notify("Invalid subcommand", vim.log.levels.ERROR, { title = "boilersharp" })
             end
         end,
         {
