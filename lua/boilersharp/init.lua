@@ -14,6 +14,14 @@ end
 ---Writes boilerplate to a C# file.
 ---@param opts? { bufnr?: integer, ensure_empty?: boolean }
 function M.write_boilerplate(opts)
+    if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
+        vim.notify(
+            "boilersharp: Treesitter parser for xml not found. Cannot generate boilerplate.",
+            vim.log.levels.ERROR
+        )
+        return
+    end
+
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
     if opts.ensure_empty == nil then
