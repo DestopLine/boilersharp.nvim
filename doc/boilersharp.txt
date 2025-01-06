@@ -14,11 +14,11 @@ Contents                                                *boilersharp-contents*
 ==============================================================================
 1. Introduction                                            *boilersharp-intro*
 
-Boilersharp.nvim is a plugin that automatically generates and writes C#
-boilerplate when you create a file inside a C# project. To be more specific,
+`boilersharp.nvim` is a plugin that automatically generates and writes C#
+boilerplate when you create a file inside a C# project. More specifically,
 boilersharp auto-generates usings, namespace and type declaration for you,
-while taking into account to the best of its abilities the version of C# that
-your project uses in order to generate boilerplate with modern features.
+while taking into account the version of C# used by your project in order to
+use modern C# features when possible.
 
 Features:
 - Enable or disable boilerplate sections.
