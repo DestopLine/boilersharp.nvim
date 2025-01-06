@@ -79,6 +79,8 @@ function H.add_commands()
                 M.write_boilerplate()
             elseif subcommand == "clear" then
                 M.clear_cache()
+            else
+                vim.notify("boilersharp: Invalid subcommand.", vim.log.levels.ERROR)
             end
         end,
         {
