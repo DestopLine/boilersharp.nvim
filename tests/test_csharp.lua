@@ -153,7 +153,7 @@ T["get_csproj_data()"] = test.new_set({
             },
             {
                 implicit_usings = false,
-                cs_version = "",
+                cs_version = nil,
                 target_framework = "net5.0",
                 file_scoped_namespace = false,
                 root_namespace = nil,
@@ -171,7 +171,7 @@ T["get_csproj_data()"] = test.new_set({
             },
             {
                 implicit_usings = false,
-                cs_version = "",
+                cs_version = nil,
                 target_framework = "netstandard2.0",
                 file_scoped_namespace = true,
                 root_namespace = "Hello.World",
@@ -188,7 +188,7 @@ T["get_csproj_data()"] = test.new_set({
             },
             {
                 implicit_usings = false,
-                cs_version = "",
+                cs_version = nil,
                 target_framework = nil,
                 target_frameworks = { "net5.0", "net8.0" },
                 file_scoped_namespace = false,
@@ -206,7 +206,7 @@ T["get_csproj_data()"] = test.new_set({
             },
             {
                 implicit_usings = true,
-                cs_version = "",
+                cs_version = nil,
                 target_framework = nil,
                 target_frameworks = { "net6.0", "net9.0" },
                 file_scoped_namespace = true,

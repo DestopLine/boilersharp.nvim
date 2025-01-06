@@ -27,7 +27,7 @@ local H = {}
 ---@class boilersharp.CsprojData
 ---@field target_framework? string Version of dotnet used. Equivalent to TargetFramework tag.
 ---@field target_frameworks? string[] Versions of dotnet used. Equivalent to TargetFrameworks tag.
----@field cs_version string Version of C# used. Equivalent to LangVer tag.
+---@field cs_version? string Version of C# used. Equivalent to LangVer tag.
 ---@field implicit_usings boolean Whether or not the project uses implicit usings.
 ---@field file_scoped_namespace boolean Whether or not the project supports file scoped namespaces.
 ---@field root_namespace? string The root namespace of the csproj, if applicable. Equivalent to RootNamespace tag.
@@ -220,7 +220,7 @@ function H.inspect_csproj(path)
     ---@type boilersharp.CsprojData
     local csproj_data = {
         implicit_usings = false,
-        cs_version = "",
+        cs_version = nil,
         target_framework = nil,
         target_frameworks = nil,
         file_scoped_namespace = false,
@@ -244,14 +244,14 @@ function H.inspect_csproj(path)
         end
     end
 
-    if csproj_data.cs_version == "" then
+    if csproj_data.cs_version then
+        csproj_data.file_scoped_namespace = M.cs_version_supports_file_scoped_namespaces(csproj_data.cs_version)
+    else
         if csproj_data.target_framework then
             csproj_data.file_scoped_namespace = M.tfm_supports_file_scoped_namespaces(csproj_data.target_framework)
         elseif csproj_data.target_frameworks then
             csproj_data.file_scoped_namespace = M.tfms_support_file_scoped_namespaces(csproj_data.target_frameworks)
         end
-    else
-        csproj_data.file_scoped_namespace = M.cs_version_supports_file_scoped_namespaces(csproj_data.cs_version)
     end
 
     return csproj_data
