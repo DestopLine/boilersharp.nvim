@@ -29,8 +29,8 @@ local function mock(expected_lines)
         M.setup()
 
         local boilerplate = require("boilersharp.boilerplate")
-        boilerplate.from_file = function() end
-        boilerplate.to_string = function() end
+        boilerplate.from_file = function() return {} end
+        boilerplate.to_string = function() return "" end
         vim.filetype.match = function() return "cs" end
         vim.split = function() return expected_lines end
     ]])

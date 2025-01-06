@@ -368,7 +368,7 @@ T["to_string()"]["converts boilerplate correctly"] = function(
         local csharp = require("boilersharp.csharp")
 
         csharp.get_csproj_data = function() return csproj_data end
-        csharp.get_dir_data = function() return dir_data end
+        csharp.get_dir_data = function() return { csproj = "", namespace = dir_data.namespace } end
 
         local boiler = boilerplate.from_file(file_path)
         return boilerplate.to_string(boiler)
