@@ -23,11 +23,16 @@ end
 ---@param opts? { bufnr?: integer, ensure_empty?: boolean, behavior?: "prepend" | "append" | "replace" }
 function M.write_boilerplate(opts)
     if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
-        vim.notify(
-            "Treesitter parser for xml not found, cannot generate boilerplate",
-            vim.log.levels.ERROR,
-            { title = "boilersharp" }
-        )
+        local message = "Treesitter parser for xml not found, cannot generate boilerplate"
+        local nvim_ts = require("nvim-treesitter")
+
+        if nvim_ts then
+            message = message .. ". Install the parser with `:TSInstall xml`."
+        else
+            message = message .. ". Install the 'nvim-treesitter/nvim-treesitter' plugin to install the xml parser."
+        end
+
+        vim.notify(message, vim.log.levels.ERROR, { title = "boilersharp" })
         return
     end
 
