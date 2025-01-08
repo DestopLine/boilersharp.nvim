@@ -52,7 +52,7 @@ Interfaces are inferred for you:
 SomeWebApp.Shared
 ├── Services
 │   └── ISomeService.cs
-└── SomeLib.csproj
+└── SomeWebApp.Shared.csproj
 ```
 ```cs
 namespace SomeWebApp.Shared.Services;
