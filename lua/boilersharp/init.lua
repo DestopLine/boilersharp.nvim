@@ -91,7 +91,12 @@ function H.add_autocommands()
             desc = "Write C# boilerplate when entering an empty C# file",
             group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
             pattern = "*.cs",
-            callback = function() M.write_boilerplate() end,
+            -- Delay execution of M.write_boilerplate to prevent issue #1
+            -- where moving a class with a language server would trigger
+            -- BufWinEnter to the new file and the plugin would think
+            -- that the file is empty and would write to it, resulting
+            -- in duplicated boilerplate. See :h vim.schedule().
+            callback = function() vim.schedule(M.write_boilerplate) end,
         })
     end
 end
