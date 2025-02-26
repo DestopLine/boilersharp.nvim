@@ -91,12 +91,20 @@ function H.add_autocommands()
             desc = "Write C# boilerplate when entering an empty C# file",
             group = vim.api.nvim_create_augroup("Boilersharp", { clear = true }),
             pattern = "*.cs",
-            -- Delay execution of M.write_boilerplate to prevent issue #1
-            -- where moving a class with a language server would trigger
-            -- BufWinEnter to the new file and the plugin would think
-            -- that the file is empty and would write to it, resulting
-            -- in duplicated boilerplate. See :h vim.schedule().
-            callback = function() vim.schedule(M.write_boilerplate) end,
+            callback = function()
+                -- We get the current buffer now to ensure that we are
+                -- actually dealing with the buffer that triggered the event.
+                -- Otherwise, stuff like Snacks.picker.diagnostics() will
+                -- throw some nasty errors.
+                local bufnr = vim.api.nvim_get_current_buf()
+
+                -- Delay execution of M.write_boilerplate to prevent issue #1
+                -- where moving a class with a language server would trigger
+                -- BufWinEnter to the new file and the plugin would think
+                -- that the file is empty and would write to it, resulting
+                -- in duplicated boilerplate. See :h vim.schedule().
+                vim.schedule(function() M.write_boilerplate({ bufnr = bufnr }) end)
+            end,
         })
     end
 end
