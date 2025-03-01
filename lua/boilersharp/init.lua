@@ -19,16 +19,17 @@ function M.setup(opts)
     H.add_commands()
 end
 
+---@class boilersharp.WriteBoilerplateOpts
+---@field bufnr? integer,
+---@field ensure_empty? boolean,
+---@field behavior? "prepend" | "append" | "replace",
+---@field filter? fun(
+---    dir_data: boilersharp.DirData,
+---    csproj_data: boilersharp.CsprojData,
+---): boolean
+
 ---Writes boilerplate to a C# file.
----@param opts? {
----    bufnr?: integer,
----    ensure_empty?: boolean,
----    behavior?: "prepend" | "append" | "replace",
----    filter?: (fun(
----        dir_data: boilersharp.DirData,
----        csproj_data: boilersharp.CsprojData,
----    ): boolean),
----}
+---@param opts? boilersharp.WriteBoilerplateOpts
 function M.write_boilerplate(opts)
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
@@ -38,43 +39,12 @@ function M.write_boilerplate(opts)
     end
     opts.filter = opts.filter or require("boilersharp.config").config.filter
 
-    local is_buffer_empty =
-        vim.api.nvim_buf_line_count(opts.bufnr) <= 1
-        and #vim.api.nvim_buf_get_lines(opts.bufnr, 0, 1, false)[1] == 0
-
-    if opts.ensure_empty and not is_buffer_empty then
+    if not H.check_write_boilerplate(opts) then
         return
-    end
-
-    local path = vim.api.nvim_buf_get_name(opts.bufnr)
-    local csharp = require("boilersharp.csharp")
-    local dir_data = csharp.get_dir_data(H.file_parent(path))
-    local csproj_data = csharp.get_csproj_data(dir_data.csproj)
-
-    if not opts.filter(dir_data, csproj_data) then
-        return
-    end
-
-    if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
-        local message = "Treesitter parser for xml not found, cannot generate boilerplate"
-        local nvim_ts = require("nvim-treesitter")
-
-        if nvim_ts then
-            message = message .. ". Install the parser with `:TSInstall xml`."
-        else
-            message = message .. ". Install the 'nvim-treesitter/nvim-treesitter' plugin to install the xml parser."
-        end
-
-        vim.notify(message, vim.log.levels.ERROR, { title = "boilersharp" })
-        return
-    end
-
-    local name, _ = vim.filetype.match({ buf = opts.bufnr })
-    if name ~= "cs" then
-        error("Boilersharp: You can only write boilerplate on a C# file")
     end
 
     local boilerplate = require("boilersharp.boilerplate")
+    local path = vim.api.nvim_buf_get_name(opts.bufnr)
     local boiler = boilerplate.from_file(path)
     if not boiler then
         vim.notify("Couldn't find csproj file", vim.log.levels.WARN, { title = "boilersharp" })
@@ -84,7 +54,7 @@ function M.write_boilerplate(opts)
 
     ---@type number, number
     local start, stop
-    if is_buffer_empty or opts.behavior == "replace" then
+    if H.is_buffer_empty(opts.bufnr) or opts.behavior == "replace" then
         start = 0
         stop = -1
     elseif opts.behavior == "prepend" then
@@ -94,6 +64,7 @@ function M.write_boilerplate(opts)
         start = -1
         stop = -1
     end
+
     vim.api.nvim_buf_set_lines(opts.bufnr, start, stop, false, lines)
 end
 
@@ -147,6 +118,53 @@ function H.add_commands()
     )
 end
 
+---@param opts boilersharp.WriteBoilerplateOpts
+---@return boolean
+function H.check_write_boilerplate(opts)
+    if opts.ensure_empty and not H.is_buffer_empty(opts.bufnr) then
+        return false
+    end
+
+    local path = vim.api.nvim_buf_get_name(opts.bufnr)
+    local csharp = require("boilersharp.csharp")
+    local dir_data = csharp.get_dir_data(H.file_parent(path))
+    local csproj_data = csharp.get_csproj_data(dir_data.csproj)
+
+    if not opts.filter(dir_data, csproj_data) then
+        return false
+    end
+
+    if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
+        local message = "Treesitter parser for xml not found, cannot generate boilerplate"
+        local nvim_ts = require("nvim-treesitter")
+
+        if nvim_ts then
+            message = message .. ". Install the parser with `:TSInstall xml`."
+        else
+            message = message .. ". Install the 'nvim-treesitter/nvim-treesitter' plugin to install the xml parser."
+        end
+
+        vim.notify(message, vim.log.levels.ERROR, { title = "boilersharp" })
+        return false
+    end
+
+    local name, _ = vim.filetype.match({ buf = opts.bufnr })
+    if name ~= "cs" then
+        error("Boilersharp: You can only write boilerplate on a C# file")
+    end
+
+    return true
+end
+
+---@param bufnr number
+function H.is_buffer_empty(bufnr)
+    return (
+        vim.api.nvim_buf_line_count(bufnr) <= 1
+        and #vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] == 0
+    )
+end
+
+---@param path string
 function H.file_parent(path)
   return vim.fn.fnamemodify(path, ":p:h")
 end
