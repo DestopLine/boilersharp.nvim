@@ -136,9 +136,9 @@ function H.check_write_boilerplate(opts)
 
     if #vim.api.nvim_get_runtime_file("parser/xml.so", false) == 0 then
         local message = "Treesitter parser for xml not found, cannot generate boilerplate"
-        local nvim_ts = require("nvim-treesitter")
+        local nvim_ts_found = pcall(function() require("nvim-treesitter") end)
 
-        if nvim_ts then
+        if nvim_ts_found then
             message = message .. ". Install the parser with `:TSInstall xml`."
         else
             message = message .. ". Install the 'nvim-treesitter/nvim-treesitter' plugin to install the xml parser."
