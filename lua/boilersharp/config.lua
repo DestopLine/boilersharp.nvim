@@ -6,6 +6,7 @@ local M = {}
 ---@field type_declaration? boilersharp.Config.TypeDeclaration | false
 ---@field add_autocommand? boolean
 ---@field indent_type? "tabs" | "spaces" | "auto"
+---@field filter? fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
 
 ---@class boilersharp.Config.Usings
 ---@field implicit_usings? "never" | "always" | "auto"
@@ -25,6 +26,7 @@ local M = {}
 ---@field type_declaration boilersharp.FullConfig.TypeDeclaration | false
 ---@field add_autocommand boolean
 ---@field indent_type "tabs" | "spaces" | "auto"
+---@field filter fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
 
 M.DEFAULT = {
     ---Information about the usings section of the boilerplate.
@@ -94,7 +96,7 @@ M.DEFAULT = {
     ---What type of indentation to use for boilerplate generation. This is
     ---only ever used when not using file scoped namespace syntax and
     ---`type_declaration` is enabled. Set this to "auto" to take this from
-    ---the buffer's options. 
+    ---the buffer's options.
     ---
     ---It is recommended that you set up an "after/ftplugin/cs.lua" file
     ---in your nvim config with options for `expandtab` instead of
@@ -102,6 +104,15 @@ M.DEFAULT = {
     ---See `:h ftplugin` and `:h after-directory`.
     ---@type "tabs" | "spaces" | "auto"
     indent_type = "auto",
+
+    ---@type fun(
+    ---    dir_data: boilersharp.DirData,
+    ---    csproj_data: boilersharp.CsprojData,
+    ---): boolean
+    ---Function that returns whether or not to write boilerplate. The
+    ---function takes as parameters data about the directory of the file,
+    ---and data about the csproj file.
+    filter = function() return true end,
 }
 
 ---@type boilersharp.FullConfig

@@ -20,7 +20,15 @@ function M.setup(opts)
 end
 
 ---Writes boilerplate to a C# file.
----@param opts? { bufnr?: integer, ensure_empty?: boolean, behavior?: "prepend" | "append" | "replace" }
+---@param opts? {
+---    bufnr?: integer,
+---    ensure_empty?: boolean,
+---    behavior?: "prepend" | "append" | "replace",
+---    filter?: (fun(
+---        dir_data: boilersharp.DirData,
+---        csproj_data: boilersharp.CsprojData,
+---    ): boolean),
+---}
 function M.write_boilerplate(opts)
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
@@ -28,12 +36,22 @@ function M.write_boilerplate(opts)
     if opts.ensure_empty == nil then
         opts.ensure_empty = true
     end
+    opts.filter = opts.filter or require("boilersharp.config").config.filter
 
     local is_buffer_empty =
         vim.api.nvim_buf_line_count(opts.bufnr) <= 1
         and #vim.api.nvim_buf_get_lines(opts.bufnr, 0, 1, false)[1] == 0
 
     if opts.ensure_empty and not is_buffer_empty then
+        return
+    end
+
+    local path = vim.api.nvim_buf_get_name(opts.bufnr)
+    local csharp = require("boilersharp.csharp")
+    local dir_data = csharp.get_dir_data(H.file_parent(path))
+    local csproj_data = csharp.get_csproj_data(dir_data.csproj)
+
+    if not opts.filter(dir_data, csproj_data) then
         return
     end
 
@@ -55,7 +73,6 @@ function M.write_boilerplate(opts)
     if name ~= "cs" then
         error("Boilersharp: You can only write boilerplate on a C# file")
     end
-    local path = vim.api.nvim_buf_get_name(opts.bufnr)
 
     local boilerplate = require("boilersharp.boilerplate")
     local boiler = boilerplate.from_file(path)
@@ -128,6 +145,10 @@ function H.add_commands()
             complete = function() return { "clear", "write" } end,
         }
     )
+end
+
+function H.file_parent(path)
+  return vim.fn.fnamemodify(path, ":p:h")
 end
 
 return M
