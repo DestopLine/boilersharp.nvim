@@ -243,5 +243,10 @@ namespace VeryOldProject
   ---function takes as parameters data about the directory of the file,
   ---and data about the csproj file.
   filter = function() return true end,
+
+  ---Whether or not to try to install the xml parser through
+  ---nvim-treesitter automatically.
+  ---@type boolean
+  auto_install_xml_parser = true,
 }
 ```

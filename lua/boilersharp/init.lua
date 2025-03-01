@@ -17,6 +17,10 @@ function M.setup(opts)
 
     H.add_autocommands()
     H.add_commands()
+
+    if config.config.auto_install_xml_parser then
+        H.ensure_xml_parser_is_installed()
+    end
 end
 
 ---@class boilersharp.WriteBoilerplateOpts
@@ -116,6 +120,18 @@ function H.add_commands()
             complete = function() return { "clear", "write" } end,
         }
     )
+end
+
+function H.ensure_xml_parser_is_installed()
+    local health = require("boilersharp.health")
+    if health.is_nvim_treesitter_installed() and not health.is_xml_parser_found() then
+        vim.notify(
+            "Installing XML parser through nvim-treesitter...",
+            vim.log.levels.INFO,
+            { title = "boilersharp.nvim" }
+        )
+        vim.cmd(":TSInstall xml")
+    end
 end
 
 ---@param opts boilersharp.WriteBoilerplateOpts

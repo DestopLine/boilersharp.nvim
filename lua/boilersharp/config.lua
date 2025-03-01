@@ -7,6 +7,7 @@ local M = {}
 ---@field add_autocommand? boolean
 ---@field indent_type? "tabs" | "spaces" | "auto"
 ---@field filter? fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
+---@field auto_install_xml_parser? boolean
 
 ---@class boilersharp.Config.Usings
 ---@field implicit_usings? "never" | "always" | "auto"
@@ -27,6 +28,7 @@ local M = {}
 ---@field add_autocommand boolean
 ---@field indent_type "tabs" | "spaces" | "auto"
 ---@field filter fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
+---@field auto_install_xml_parser boolean
 
 M.DEFAULT = {
     ---Information about the usings section of the boilerplate.
@@ -113,6 +115,11 @@ M.DEFAULT = {
     ---function takes as parameters data about the directory of the file,
     ---and data about the csproj file.
     filter = function() return true end,
+
+    ---Whether or not to try to install the xml parser through
+    ---nvim-treesitter automatically.
+    ---@type boolean
+    auto_install_xml_parser = true,
 }
 
 ---@type boilersharp.FullConfig
