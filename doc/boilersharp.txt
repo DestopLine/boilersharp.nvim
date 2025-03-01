@@ -158,32 +158,32 @@ DirData                                                  *boilersharp.DirData*
     Data related to a directory in a C# project.
 
     Fields: ~
-      - {csproj}     (`string?`) Path to csproj file this directory belongs
+      • {csproj}?    (`string`) Path to csproj file this directory belongs
                      to, if any.
 
-      - {namespace}  (`string`) Namespace that the C# files in the directory
+      • {namespace}  (`string`) Namespace that the C# files in the directory
                      will use.
 
 CsprojData                                            *boilersharp.CsprojData*
     Data related to a csproj file.
 
     Fields: ~
-      - {target_framework}       (`string?`) Version of dotnet used.
+      • {target_framework}       (`string?`) Version of dotnet used.
                                  Equivalent to TargetFramework tag.
 
-      - {target_frameworks}      (`string[]?`) Versions of dotnet used.
+      • {target_frameworks}      (`string[]?`) Versions of dotnet used.
                                  Equivalent to TargetFrameworks tag.
 
-      - {cs_version}             (`string?`) Version of C# used. Equivalent to
+      • {cs_version}             (`string?`) Version of C# used. Equivalent to
                                  LangVer tag.
 
-      - {implicit_usings}        (`boolean?`) Whether or not the project uses
+      • {implicit_usings}        (`boolean?`) Whether or not the project uses
                                  implicit usings.
 
-      - {file_scoped_namespace}  (`boolean?`) Whether or not the project
+      • {file_scoped_namespace}  (`boolean?`) Whether or not the project
                                  supports file scoped namespaces.
 
-      - {root_namespace}         (`string?`) The root namespace of the csproj,
+      • {root_namespace}         (`string?`) The root namespace of the csproj,
                                  if applicable. Equivalent to RootNamespace
                                  tag.
 
@@ -205,23 +205,23 @@ boilersharp.setup({opts})                                *boilersharp.setup()*
 <
     
     Parameters: ~
-      - {opts}  (`table?`): Configuration options.
-                See |boilersharp-default-config| for all options.
+      • {opts}?  (`table`): Configuration options.
+                 See |boilersharp-default-config| for all options.
 
 boilersharp.write_boilerplate({opts})        *boilersharp.write_boilerplate()*
     Writes boilerplate to a buffer.
 
     Parameters: ~
-      - {opts}  (`table?`) Optional parameters:
-                - bufnr: (`integer?`) Buffer to write boilerplate to.
-                  Defaults to `0` (current buffer).
-                - ensure_empty: (`boolean?`) Only write to the buffer when it
-                  is empty. Defaults to `true`.
-                - behavior: (`("append" | "prepend" | "replace")?`) Whether
-                  to append to, prepend to, or replace the current file
-                  contents. Defaults to `"prepend"`.
+      • {opts}?  (`table`) Optional parameters:
+                 • {bufnr}? (`integer`) Buffer to write boilerplate to.
+                   Defaults to `0` (current buffer).
+                 • {ensure_empty}? (`boolean`) Only write to the buffer when
+                   it is empty. Defaults to `true`.
+                 • {behavior}? (`"append" | "prepend" | "replace"`) Whether
+                   to append to, prepend to, or replace the current file
+                   contents. Defaults to `"prepend"`.
 
-boilersharp.clear_cache()            *boilersharp.clear_cache()*
+boilersharp.clear_cache()                          *boilersharp.clear_cache()*
     Clears cached directories and csproj files.
 
     Useful for when you change properties of the csproj file on your
@@ -239,8 +239,8 @@ boilersharp.clear_cache()            *boilersharp.clear_cache()*
     Without arguments, runs the 'write' subcommand.
 
     Subcommands: ~
-      - write: Writes boilerplate to the current buffer.
-      - clear: Clears the cache. See |boilersharp.clear_cache()|.
+      • {write} Writes boilerplate to the current buffer.
+      • {clear} Clears the cache. See |boilersharp.clear_cache()|.
 
 
 vim:tw=78:ts=8:et:ft=help:norl:
