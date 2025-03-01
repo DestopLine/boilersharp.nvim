@@ -8,7 +8,7 @@ function M.setup(opts)
         vim.notify(
             "boilersharp.nvim requires nvim 0.10.0 or greater",
             vim.log.levels.ERROR,
-            { title = "boilersharp" }
+            { title = "boilersharp.nvim" }
         )
     end
 
@@ -47,7 +47,7 @@ function M.write_boilerplate(opts)
     local path = vim.api.nvim_buf_get_name(opts.bufnr)
     local boiler = boilerplate.from_file(path)
     if not boiler then
-        vim.notify("Couldn't find csproj file", vim.log.levels.WARN, { title = "boilersharp" })
+        vim.notify("Couldn't find csproj file", vim.log.levels.WARN, { title = "boilersharp.nvim" })
         return
     end
     local lines = vim.split(boilerplate.to_string(boiler), "\n")
@@ -107,7 +107,7 @@ function H.add_commands()
             elseif subcommand == "clear" then
                 M.clear_cache()
             else
-                vim.notify("Invalid subcommand", vim.log.levels.ERROR, { title = "boilersharp" })
+                vim.notify("Invalid subcommand", vim.log.levels.ERROR, { title = "boilersharp.nvim" })
             end
         end,
         {
@@ -144,7 +144,7 @@ function H.check_write_boilerplate(opts)
             message = message .. ". Install the 'nvim-treesitter/nvim-treesitter' plugin to install the xml parser."
         end
 
-        vim.notify(message, vim.log.levels.ERROR, { title = "boilersharp" })
+        vim.notify(message, vim.log.levels.ERROR, { title = "boilersharp.nvim" })
         return false
     end
 
