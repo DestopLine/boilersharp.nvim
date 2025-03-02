@@ -235,13 +235,13 @@ namespace VeryOldProject
   ---@type "tabs" | "spaces" | "auto"
   indent_type = "auto",
 
+  ---Function that returns whether or not to write boilerplate. The
+  ---function takes as parameters data about the directory of the file,
+  ---and data about the csproj file.
   ---@type fun(
   ---    dir_data: boilersharp.DirData,
   ---    csproj_data: boilersharp.CsprojData,
   ---): boolean
-  ---Function that returns whether or not to write boilerplate. The
-  ---function takes as parameters data about the directory of the file,
-  ---and data about the csproj file.
   filter = function() return true end,
 
   ---Whether or not to try to install the xml parser through
