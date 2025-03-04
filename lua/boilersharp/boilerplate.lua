@@ -163,7 +163,7 @@ function H.get_indentation(level)
     elseif config.indent_type == "spaces" then
         is_spaces = true
     elseif config.indent_type == "auto" then
-        is_spaces = vim.opt.expandtab:get()
+        is_spaces = vim.o.expandtab
     else
         error("Boilersharp: Invalid option for indent_type")
     end
@@ -171,7 +171,7 @@ function H.get_indentation(level)
     if is_spaces then
         -- `repeat` is a lua keyword
         ---@diagnostic disable-next-line: undefined-field
-        indent = vim.fn["repeat"](" ", vim.opt.shiftwidth:get())
+        indent = vim.fn["repeat"](" ", vim.o.shiftwidth)
     else
         indent = "\t"
     end
