@@ -233,6 +233,8 @@ namespace VeryOldProject
   ---changing this option from its default value.
   ---See `:h ftplugin` and `:h after-directory`.
   ---@type "tabs" | "spaces" | "auto"
+  ---
+  ---Warning: This option may be overridden by tpope/vim-sleuth.
   indent_type = "auto",
 
   ---Function that returns whether or not to write boilerplate. The

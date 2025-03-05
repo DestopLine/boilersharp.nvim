@@ -104,6 +104,8 @@ M.DEFAULT = {
     ---in your nvim config with options for `expandtab` instead of
     ---changing this option from its default value.
     ---See `:h ftplugin` and `:h after-directory`.
+    ---
+    ---Warning: This option may be overridden by tpope/vim-sleuth.
     ---@type "tabs" | "spaces" | "auto"
     indent_type = "auto",
 
