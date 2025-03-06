@@ -137,9 +137,9 @@ Default configuration                             *boilersharp-default-config*
         ---in your nvim config with options for `expandtab` instead of
         ---changing this option from its default value.
         ---See `:h ftplugin` and `:h after-directory`.
-        ---@type "tabs" | "spaces" | "auto"
         ---
         ---Warning: This option may be overridden by tpope/vim-sleuth.
+        ---@type "tabs" | "spaces" | "auto"
         indent_type = "auto",
 
         ---Function that returns whether or not to write boilerplate. The
@@ -175,24 +175,24 @@ CsprojData                                            *boilersharp.CsprojData*
     Data related to a csproj file.
 
     Fields: ~
-      • {target_framework}       (`string?`) Version of dotnet used.
-                                 Equivalent to TargetFramework tag.
+      • {target_framework}?       (`string`) Version of dotnet used.
+                                  Equivalent to TargetFramework tag.
 
-      • {target_frameworks}      (`string[]?`) Versions of dotnet used.
-                                 Equivalent to TargetFrameworks tag.
+      • {target_frameworks}?      (`string[]`) Versions of dotnet used.
+                                  Equivalent to TargetFrameworks tag.
 
-      • {cs_version}             (`string?`) Version of C# used. Equivalent to
-                                 LangVer tag.
+      • {cs_version}?             (`string`) Version of C# used. Equivalent to
+                                  LangVer tag.
 
-      • {implicit_usings}        (`boolean?`) Whether or not the project uses
-                                 implicit usings.
+      • {implicit_usings}?        (`boolean`) Whether or not the project uses
+                                  implicit usings.
 
-      • {file_scoped_namespace}  (`boolean?`) Whether or not the project
-                                 supports file scoped namespaces.
+      • {file_scoped_namespace}?  (`boolean`) Whether or not the project
+                                  supports file scoped namespaces.
 
-      • {root_namespace}         (`string?`) The root namespace of the csproj,
-                                 if applicable. Equivalent to RootNamespace
-                                 tag.
+      • {root_namespace}?         (`string`) The root namespace of the csproj,
+                                  if applicable. Equivalent to RootNamespace
+                                  tag.
 
 ==============================================================================
 5. Functions                                           *boilersharp-functions*

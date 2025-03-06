@@ -232,9 +232,9 @@ namespace VeryOldProject
   ---in your nvim config with options for `expandtab` instead of
   ---changing this option from its default value.
   ---See `:h ftplugin` and `:h after-directory`.
-  ---@type "tabs" | "spaces" | "auto"
   ---
   ---Warning: This option may be overridden by tpope/vim-sleuth.
+  ---@type "tabs" | "spaces" | "auto"
   indent_type = "auto",
 
   ---Function that returns whether or not to write boilerplate. The
