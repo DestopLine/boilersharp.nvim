@@ -27,6 +27,7 @@ end
 ---@field bufnr? integer,
 ---@field ensure_empty? boolean,
 ---@field behavior? "prepend" | "append" | "replace",
+---@field ignore_special_buffers? boolean,
 ---@field filter? fun(
 ---    dir_data: boilersharp.DirData,
 ---    csproj_data: boilersharp.CsprojData?,
@@ -40,6 +41,9 @@ function M.write_boilerplate(opts)
     opts.behavior = opts.behavior or "prepend"
     if opts.ensure_empty == nil then
         opts.ensure_empty = true
+    end
+    if opts.ignore_special_buffers == nil then
+        opts.ignore_special_buffers = require("boilersharp.config").config.ignore_special_buffers
     end
     opts.filter = opts.filter or require("boilersharp.config").config.filter
 
@@ -138,6 +142,10 @@ end
 ---@return boolean
 function H.check_write_boilerplate(opts)
     if opts.ensure_empty and not H.is_buffer_empty(opts.bufnr) then
+        return false
+    end
+
+    if opts.ignore_special_buffers and vim.bo[opts.bufnr].buftype ~= "" then
         return false
     end
 

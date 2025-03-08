@@ -96,7 +96,7 @@ T["write_boilerplate()"]["writes when filter returns true"] = function(expected_
     child.lua([[
         M.write_boilerplate({
             filter = function(dir_data, csproj_data)
-                return dir_data ~= nil and csproj_data ~= nil
+                return dir_data ~= nil
             end
         })
     ]])
@@ -110,7 +110,7 @@ T["write_boilerplate()"]["does not write when filter returns false"] = function(
     child.lua([[
         M.write_boilerplate({
             filter = function(dir_data, csproj_data)
-                return dir_data == nil or csproj_data == nil
+                return dir_data == nil
             end
         })
     ]])

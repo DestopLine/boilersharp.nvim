@@ -250,5 +250,10 @@ namespace VeryOldProject
   ---nvim-treesitter automatically.
   ---@type boolean
   auto_install_xml_parser = true,
+
+  ---Whether to ignore buffers with buftype different than "".
+  ---See `:h 'buftype'`.
+  ---@type boolean
+  ignore_special_buffers = true,
 }
 ```

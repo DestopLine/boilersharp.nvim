@@ -8,6 +8,7 @@ local M = {}
 ---@field indent_type? "tabs" | "spaces" | "auto"
 ---@field filter? fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
 ---@field auto_install_xml_parser? boolean
+---@field ignore_special_buffers? boolean
 
 ---@class boilersharp.Config.Usings
 ---@field implicit_usings? "never" | "always" | "auto"
@@ -29,6 +30,7 @@ local M = {}
 ---@field indent_type "tabs" | "spaces" | "auto"
 ---@field filter fun(dir_data: boilersharp.DirData, csproj_data: boilersharp.CsprojData): boolean
 ---@field auto_install_xml_parser boolean
+---@field ignore_special_buffers boolean
 
 M.DEFAULT = {
     ---Information about the usings section of the boilerplate.
@@ -122,6 +124,11 @@ M.DEFAULT = {
     ---nvim-treesitter automatically.
     ---@type boolean
     auto_install_xml_parser = true,
+
+    ---Whether to ignore buffers with buftype different than "".
+    ---See `:h 'buftype'`.
+    ---@type boolean
+    ignore_special_buffers = true,
 }
 
 ---@type boilersharp.FullConfig
