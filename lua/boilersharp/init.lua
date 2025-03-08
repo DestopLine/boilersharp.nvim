@@ -29,7 +29,7 @@ end
 ---@field behavior? "prepend" | "append" | "replace",
 ---@field filter? fun(
 ---    dir_data: boilersharp.DirData,
----    csproj_data: boilersharp.CsprojData,
+---    csproj_data: boilersharp.CsprojData?,
 ---): boolean
 
 ---Writes boilerplate to a C# file.
@@ -144,7 +144,12 @@ function H.check_write_boilerplate(opts)
     local path = vim.api.nvim_buf_get_name(opts.bufnr)
     local csharp = require("boilersharp.csharp")
     local dir_data = csharp.get_dir_data(H.file_parent(path))
-    local csproj_data = csharp.get_csproj_data(dir_data.csproj)
+
+    ---@type boilersharp.CsprojData?
+    local csproj_data
+    if dir_data.csproj then
+        csproj_data = csharp.get_csproj_data(dir_data.csproj)
+    end
 
     if not opts.filter(dir_data, csproj_data) then
         return false
