@@ -130,7 +130,7 @@ namespace VeryOldProject
   use({
     "DestopLine/boilersharp.nvim",
     config = function()
-      require("boielrsharp").setup({
+      require("boilersharp").setup({
         -- Your options go here
       })
     end,
@@ -147,7 +147,7 @@ namespace VeryOldProject
   ```vim
   Plug 'DestopLine/boilersharp.nvim'
   lua << EOF
-  require("boilersharp.nvim").setup({
+  require("boilersharp").setup({
     -- Your options go here
   })
   EOF
