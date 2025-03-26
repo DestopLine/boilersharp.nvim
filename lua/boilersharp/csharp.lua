@@ -205,6 +205,9 @@ function H.inspect_csproj(path)
 
     local parser = vim.treesitter.get_string_parser(source, TSLANG)
     local tree = parser:parse()
+    if tree == nil then
+        error("Boilersharp: could not parse the xml file")
+    end
     local root = tree[1]:root()
 
     ---@type number, number
