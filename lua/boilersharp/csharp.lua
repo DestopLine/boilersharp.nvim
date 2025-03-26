@@ -229,8 +229,14 @@ function H.inspect_csproj(path)
 
     -- pattern, captures, metadata
     for _, captures, _ in query:iter_matches(root, source) do
-        local key = vim.treesitter.get_node_text(captures[key_id], source)
-        local value = vim.treesitter.get_node_text(captures[value_id], source)
+        local key, value
+        if vim.fn.has("nvim-0.11.0") == 1 then
+            key = vim.treesitter.get_node_text(captures[key_id][1], source)
+            value = vim.treesitter.get_node_text(captures[value_id][1], source)
+        else
+            key = vim.treesitter.get_node_text(captures[key_id], source)
+            value = vim.treesitter.get_node_text(captures[value_id], source)
+        end
         if key == "ImplicitUsings" and value == "enable" then
             csproj_data.implicit_usings = true
         elseif key == "LangVersion" then
